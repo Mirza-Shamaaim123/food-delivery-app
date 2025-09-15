@@ -1,6 +1,6 @@
 @extends('frontend.layout.main')
 @section('content')
-<div class="th-hero-wrapper hero-1 bg-smoke" id="hero">
+    <div class="th-hero-wrapper hero-1 bg-smoke" id="hero">
         <div class="hero-img-shape-1">
             <div class="logo-icon-wrap">
                 <div class="logo-icon">
@@ -46,87 +46,30 @@
                 <div class="swiper th-slider" id="catSlider1"
                     data-slider-options='{"autoplay":true,"loop":true,"breakpoints":{"0":{"slidesPerView":1},"400":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"992":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"6"}}}'>
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-1.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Dominos Pizza</a></h3>
-                                <p class="box-subtitle">25 Items Available</p>
+                        @foreach ($categories as $category)
+                            <div class="swiper-slide">
+                                <div class="category-card">
+                                    <img class="cat-i-bottom" src="{{ asset('assets/img/icon/cat-1-bottom.png') }}"
+                                        alt="img">
+
+                                    <div class="box-icon">
+                                        @if ($category->image)
+                                            <img src="{{ asset('storage/' . $category->image) }}"
+                                                alt="{{ $category->name }}">
+                                        @else
+                                            <img src="{{ asset('assets/img/category/default.png') }}" alt="No Image">
+                                        @endif
+                                    </div>
+
+                                    <h3 class="box-title">
+                                        <a href="#">{{ $category->name }}</a>
+                                    </h3>
+                                    <p class="box-subtitle">{{ $category->available_items }} Items Available</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-2.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Grill Chicken</a></h3>
-                                <p class="box-subtitle">22 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-3.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Delicious Burger</a></h3>
-                                <p class="box-subtitle">23 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-4.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">FBox Meals</a></h3>
-                                <p class="box-subtitle">22 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-5.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Combo Foods</a></h3>
-                                <p class="box-subtitle">20 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-1.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Dominos Pizza</a></h3>
-                                <p class="box-subtitle">25 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-2.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Grill Chicken</a></h3>
-                                <p class="box-subtitle">22 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-3.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Delicious Burger</a></h3>
-                                <p class="box-subtitle">23 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-4.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">FBox Meals</a></h3>
-                                <p class="box-subtitle">22 Items Available</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="category-card"><img class="cat-i-bottom" src="assets/img/icon/cat-1-bottom.png"
-                                    alt="img">
-                                <div class="box-icon"><img src="assets/img/category/category_1-5.png" alt="Image"></div>
-                                <h3 class="box-title"><a href="shop.html">Combo Foods</a></h3>
-                                <p class="box-subtitle">20 Items Available</p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
+
                 </div><button data-slider-prev="#catSlider1" class="slider-arrow slider-prev"><img
                         src="assets/img/icon/left-arrow.svg" alt=""></button> <button data-slider-next="#catSlider1"
                     class="slider-arrow slider-next"><img src="assets/img/icon/right-arrow.svg" alt=""></button>
@@ -264,7 +207,8 @@
                                 <p class="box-text pe-xxl-5 me-xl-5">At the heart of our kitchen are bold flavors,
                                     high-quality ingredients, and a commitment to consistency.</p>
                             </div>
-                            <div class="thumb global-img"><img src="assets/img/history/history-sm-1-1.jpg" alt="img">
+                            <div class="thumb global-img"><img src="assets/img/history/history-sm-1-1.jpg"
+                                    alt="img">
                             </div>
                         </div>
                         <div class="history-box-1 wow fadeinup" data-wow-delay=".4s">
@@ -274,7 +218,8 @@
                                 <p class="box-text pe-xxl-5 me-xl-5">At the heart of our kitchen are bold flavors,
                                     high-quality ingredients, and a commitment to consistency.</p>
                             </div>
-                            <div class="thumb global-img"><img src="assets/img/history/history-sm-1-2.jpg" alt="img">
+                            <div class="thumb global-img"><img src="assets/img/history/history-sm-1-2.jpg"
+                                    alt="img">
                             </div>
                         </div>
                         <div class="history-box-1 wow fadeinup" data-wow-delay=".6s">
@@ -284,7 +229,8 @@
                                 <p class="box-text pe-xxl-5 me-xl-5">At the heart of our kitchen are bold flavors,
                                     high-quality ingredients, and a commitment to consistency.</p>
                             </div>
-                            <div class="thumb global-img"><img src="assets/img/history/history-sm-1-3.jpg" alt="img">
+                            <div class="thumb global-img"><img src="assets/img/history/history-sm-1-3.jpg"
+                                    alt="img">
                             </div>
                         </div>
                     </div>
@@ -300,7 +246,8 @@
             </div>
             <div class="row gy-4 justify-content-center">
                 <div class="col-lg-3">
-                    <div class="menu-img-1-1 gsap-scroll-float-down2"><img src="assets/img/menu/menu-1-1.jpg" alt="img">
+                    <div class="menu-img-1-1 gsap-scroll-float-down2"><img src="assets/img/menu/menu-1-1.jpg"
+                            alt="img">
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -308,7 +255,8 @@
                         <ul class="nav nav-tabs wow fadeinup" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation"><button class="nav-link active"
                                     id="event-creating-tab" data-bs-toggle="tab" data-bs-target="#event-creating"
-                                    type="button" role="tab" aria-controls="event-creating" aria-selected="true">Event
+                                    type="button" role="tab" aria-controls="event-creating"
+                                    aria-selected="true">Event
                                     Creating</button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="meal-plans-tab"
                                     data-bs-toggle="tab" data-bs-target="#meal-plans" type="button" role="tab"
@@ -667,7 +615,8 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="menu-img-1-2 gsap-scroll-float-up"><img src="assets/img/menu/menu-1-2.jpg" alt="img">
+                    <div class="menu-img-1-2 gsap-scroll-float-up"><img src="assets/img/menu/menu-1-2.jpg"
+                            alt="img">
                     </div>
                 </div>
             </div>
@@ -675,11 +624,10 @@
     </div>
     <div class="gallery-sec-1 space bg-smoke overflow-hidden">
         <div class="container">
-            <div class="title-area secTitle-gsap-anim-1 text-center mb-60"><span
-                    class="sub-title text-anime-style-1">Our Food Gallery</span>
-                <h2 class="sec-title text-anime-style-2">Let’s See our Fast Food <span
-                        class="text-theme">Category</span></h2><img class="img-anime-style-1"
-                    src="assets/img/icon/title-shape.png" alt="img">
+            <div class="title-area secTitle-gsap-anim-1 text-center mb-60"><span class="sub-title text-anime-style-1">Our
+                    Food Gallery</span>
+                <h2 class="sec-title text-anime-style-2">Let’s See our Fast Food <span class="text-theme">Category</span>
+                </h2><img class="img-anime-style-1" src="assets/img/icon/title-shape.png" alt="img">
             </div>
             <div class="slider-area">
                 <div class="slider-area-wrap" data-mask-src="assets/img/bg/gallery-1-mask.png">
@@ -725,8 +673,9 @@
                         </div>
                     </div>
                 </div><button data-slider-prev="#gallerySlider1" class="slider-arrow slider-prev"><img
-                        src="assets/img/icon/left-arrow.svg" alt=""></button> <button data-slider-next="#gallerySlider1"
-                    class="slider-arrow slider-next"><img src="assets/img/icon/right-arrow.svg" alt=""></button>
+                        src="assets/img/icon/left-arrow.svg" alt=""></button> <button
+                    data-slider-next="#gallerySlider1" class="slider-arrow slider-next"><img
+                        src="assets/img/icon/right-arrow.svg" alt=""></button>
             </div>
         </div>
     </div>
@@ -762,7 +711,8 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-4">
-                    <div class="coming-right wow fadeinright"><img src="assets/img/coming/coming-right.png" alt="img">
+                    <div class="coming-right wow fadeinright"><img src="assets/img/coming/coming-right.png"
+                            alt="img">
                     </div>
                 </div>
             </div>
@@ -786,8 +736,8 @@
                                         href="https://facebook.com/"><i class="fab fa-facebook-f"></i></a> <a
                                         target="_blank" href="https://instagram.com/"><i
                                             class="fab fa-instagram"></i></a> <a target="_blank"
-                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a
-                                        target="_blank" href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
+                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a target="_blank"
+                                        href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -808,8 +758,8 @@
                                         href="https://facebook.com/"><i class="fab fa-facebook-f"></i></a> <a
                                         target="_blank" href="https://instagram.com/"><i
                                             class="fab fa-instagram"></i></a> <a target="_blank"
-                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a
-                                        target="_blank" href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
+                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a target="_blank"
+                                        href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -830,8 +780,8 @@
                                         href="https://facebook.com/"><i class="fab fa-facebook-f"></i></a> <a
                                         target="_blank" href="https://instagram.com/"><i
                                             class="fab fa-instagram"></i></a> <a target="_blank"
-                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a
-                                        target="_blank" href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
+                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a target="_blank"
+                                        href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -852,8 +802,8 @@
                                         href="https://facebook.com/"><i class="fab fa-facebook-f"></i></a> <a
                                         target="_blank" href="https://instagram.com/"><i
                                             class="fab fa-instagram"></i></a> <a target="_blank"
-                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a
-                                        target="_blank" href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
+                                        href="https://youtube.com/"><i class="fab fa-youtube"></i></a> <a target="_blank"
+                                        href="https://whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -1060,8 +1010,9 @@
                         </div>
                     </div>
                 </div><button data-slider-prev="#blogSlider1" class="slider-arrow slider-prev"><img
-                        src="assets/img/icon/left-arrow.svg" alt=""></button> <button data-slider-next="#blogSlider1"
-                    class="slider-arrow slider-next"><img src="assets/img/icon/right-arrow.svg" alt=""></button>
+                        src="assets/img/icon/left-arrow.svg" alt=""></button> <button
+                    data-slider-next="#blogSlider1" class="slider-arrow slider-next"><img
+                        src="assets/img/icon/right-arrow.svg" alt=""></button>
             </div>
         </div>
     </section>
