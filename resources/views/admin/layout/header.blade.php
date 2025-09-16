@@ -31,12 +31,20 @@
     <link href="{{ asset('dashboard_assets/css/style.css') }}" rel="stylesheet">
 	<link href="{{ asset('dashboard_assets/cdn.lineicons.com/2.0/LineIcons.css') }}" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+	
 
 	<!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Bootstrap JS Bundle (includes Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
 
 	
 	
@@ -794,16 +802,41 @@
 							<i class="flaticon-dashboard-1"></i>
 							<span class="nav-text">Dashboard</span>
 						</a>
-                         <ul aria-expanded="false">
+						
+                         {{-- <ul aria-expanded="false">
 							<li><a href="{{ route('admin.categorylist') }}">Category</a></li>
 							<li><a href="analytics.html">Analytics</a></li>
 							<li><a href="review.html">Review</a></li>
 							<li><a href="order.html">Order</a></li>
 							<li><a href="order-list.html">Order List</a></li>
 							<li><a href="customer-list.html">Customer List</a></li>
-						</ul> 
+						</ul>  --}}
 
                     </li>
+					 <li><a class="has-arrow ai-icon" href="{{ route('admin.categorylist') }}" aria-expanded="false">
+							<i class="flaticon-dashboard-1"></i>
+							<span class="nav-text">Category</span>
+						</a>
+						
+                      
+
+                    </li>
+					<li>
+						<a class="has-arrow ai-icon" href="{{ route('admin.tag') }}" aria-expanded="false">
+							<i class="flaticon-dashboard-1"></i>
+							<span class="nav-text">Tags</span>
+						</a>
+
+					</li>
+					<li>
+						<a class="has-arrow ai-icon" href="{{ route('admin.productlist') }}" aria-expanded="false">
+							<i class="flaticon-dashboard-1"></i>
+							<span class="nav-text">Product</span>
+						</a>
+
+					</li>
+
+
                     {{-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 						<i class="flaticon-app"></i>
 							<span class="nav-text">Apps</span>

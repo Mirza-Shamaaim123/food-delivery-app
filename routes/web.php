@@ -3,6 +3,8 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +21,7 @@ Route::get('/account/login', [AccountController::class, 'login'])->name('account
 Route::get('/', [FrontendController::class, 'index'])->name('frontend.index');
             //      ADMIN ROUTES
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard')->middleware([ 'admin_check']);
-            //      CATEGORY ROUTES
+            //    ADMIN  CATEGORY ROUTES
 Route::get('/admin/category', [CategoryController::class, 'index'])->name('admin.categorylist')->middleware([ 'admin_check']);
 Route::get('/admin/category/add', [CategoryController::class, 'add'])->name('admin.categoryadd')->middleware([ 'admin_check']);
 Route::post('/add-category', [CategoryController::class, 'store'])->name('admin.category.store')->middleware([ 'admin_check']);
@@ -27,4 +29,11 @@ Route::get('/admin/category/{id}/edit', [CategoryController::class, 'edit'])->na
 Route::post('/admin/category/{id}/update', [CategoryController::class, 'updatecategory'])->name('admin.category.update');
 Route::delete('/admin/category/{id}/delete', [CategoryController::class, 'destroy'])->name('admin.category.delete');
 Route::get('/admin/category/{id}/view', [CategoryController::class, 'view'])->name('admin.category.view');
-
+                //    ADMIN  PRODUCT ROUTES
+Route::get('/admin/product', [ProductController::class, 'index'])->name('admin.productlist')->middleware([ 'admin_check']);
+Route::post('/admin/product', [ProductController::class, 'store'])->name('admin.product.store')->middleware([ 'admin_check']);
+//                //    ADMIN  TAG ROUTES
+Route::get('/admin/tag', [TagController::class, 'index'])->name('admin.tag')->middleware([ 'admin_check']);
+Route::post('/admin/tag', [TagController::class, 'store'])->name('admin.tag.store')->middleware([ 'admin_check']);
+Route::put('/admin/tag/{id}', [TagController::class, 'update'])->name('admin.tag.update')->middleware([ 'admin_check']);
+Route::delete('/admin/tag/{id}', [TagController::class, 'destroy'])->name('admin.tag.delete')->middleware([ 'admin_check']);

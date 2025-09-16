@@ -57,7 +57,7 @@
                                             <img src="{{ asset('storage/' . $category->image) }}"
                                                 alt="{{ $category->name }}">
                                         @else
-                                            <img src="{{ asset('assets/img/category/default.png') }}" alt="No Image">
+                                            <img src="" alt="No Image">
                                         @endif
                                     </div>
 

@@ -21,10 +21,10 @@ class CategoryController extends Controller
 
         return view('admin.category-list', compact('category'));
     }
-    public function add()
-    {
-        return view('admin.category-add');
-    }
+    // public function add()
+    // {
+    //     return view('admin.category-add');
+    // }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
