@@ -29,20 +29,14 @@
 	<link rel="icon" type="image/png" href="{{ asset('dashboard_assets/images/favicon.png') }}">
     <link href="{{ asset('dashboard_assets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet">
     <link href="{{ asset('dashboard_assets/css/style.css') }}" rel="stylesheet">
-	<link href="{{ asset('dashboard_assets/cdn.lineicons.com/2.0/LineIcons.css') }}" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	{{-- <link href="{{ asset('dashboard_assets/cdn.lineicons.com/2.0/LineIcons.css') }}" rel="stylesheet"> --}}
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	 <link rel="stylesheet" href="vendor/select2/css/select2.min.css">
 
 	
 
 	<!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap JS Bundle (includes Popper) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
 

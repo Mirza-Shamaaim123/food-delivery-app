@@ -18,7 +18,7 @@ Route::post('/account/process-register', [AccountController::class, 'processRegi
 Route::post('/account/authenticate', [AccountController::class, 'authenticate'])->name('account.authenticate');
 Route::get('/account/login', [AccountController::class, 'login'])->name('account.login');
 //              Category view in frontend
-Route::get('/', [FrontendController::class, 'index'])->name('frontend.index');
+Route::get('/home', [FrontendController::class, 'index'])->name('frontend.index');
             //      ADMIN ROUTES
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard')->middleware([ 'admin_check']);
             //    ADMIN  CATEGORY ROUTES
@@ -32,6 +32,8 @@ Route::get('/admin/category/{id}/view', [CategoryController::class, 'view'])->na
                 //    ADMIN  PRODUCT ROUTES
 Route::get('/admin/product', [ProductController::class, 'index'])->name('admin.productlist')->middleware([ 'admin_check']);
 Route::post('/admin/product', [ProductController::class, 'store'])->name('admin.product.store')->middleware([ 'admin_check']);
+Route::put('/admin/product/{id}', [ProductController::class, 'update'])->name('admin.product.update')->middleware([ 'admin_check']);
+Route::delete('/admin/product/{id}', [ProductController::class, 'destroy'])->name('admin.product.delete')->middleware([ 'admin_check']);
 //                //    ADMIN  TAG ROUTES
 Route::get('/admin/tag', [TagController::class, 'index'])->name('admin.tag')->middleware([ 'admin_check']);
 Route::post('/admin/tag', [TagController::class, 'store'])->name('admin.tag.store')->middleware([ 'admin_check']);

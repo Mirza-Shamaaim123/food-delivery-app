@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('tag_id')->nullable()->after('name');
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('set null');
+            $table->unsignedBigInteger('category_id')->after('id');
+
+            // Foreign key constraint (optional but recommended)
+            $table->foreign('category_id')
+                ->references('id')
+                ->on('categories')
+                ->onDelete('cascade'); // agar category delete ho to uske products bhi delete ho jayenge
         });
     }
 
@@ -25,8 +30,8 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             //
-            $table->dropForeign(['tag_id']);
-            $table->dropColumn('tag_id');
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
         });
     }
 };

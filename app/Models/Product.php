@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     //
-        use HasFactory;
+    use HasFactory;
 
-      
+
 
     protected $fillable = [
         'name',
@@ -20,16 +20,17 @@ class Product extends Model
         'availability',
         'status',
         'category_id',
-        'tag_id',
+        
     ];
-     public function product()
-        {
-            return $this->belongsTo(Category::class);
-        }
-        public function tag()
-{
-    return $this->belongsTo(Tag::class, 'tag_id');
-}
-
-
+    protected $casts = [
+        'tag_ids' => 'array', // JSON column ko array me convert karega
+    ];
+    public function product()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 }

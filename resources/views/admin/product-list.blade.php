@@ -9,12 +9,13 @@
         <title>Category List</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
+
         <style>
             /* body {
-                                                              font-family: 'Inter', sans-serif;
-                                                              background-color: #f9f9f9;
-                                                              padding: 30px;
-                                                            } */
+                                                                                                                                                                      font-family: 'Inter', sans-serif;
+                                                                                                                                                                      background-color: #f9f9f9;
+                                                                                                                                                                      padding: 30px;
+                                                                                                                                                                    } */
 
             h2 {
                 font-size: 24px;
@@ -161,6 +162,8 @@
 
             </div>
 
+
+
             <table>
                 <thead>
                     <tr>
@@ -190,7 +193,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($product->status)
+                                @if ($product->status == 'active')
                                     <span class="badge bg-success">Active</span>
                                 @else
                                     <span class="badge bg-danger">Inactive</span>
@@ -212,7 +215,7 @@
                                                 Edit
                                             </button></li>
                                         <li>
-                                            <form action="" method="POST"
+                                            <form action="{{ route('admin.product.delete', $product->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this product?')">
                                                 @csrf
                                                 @method('DELETE')
@@ -277,13 +280,16 @@
 
                         <div class="mb-3">
                             <label for="tags">Tags</label>
-                            <select name="tag_ids[]" class="form-control " multiple required>
-                                <option>Select Tags</option> {{-- 👈 Placeholder support --}}
+                            <select name="tags[]" id="tags" class="form-control" multiple>
                                 @foreach ($tags as $tag)
                                     <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+
+
+
 
 
 
@@ -310,6 +316,7 @@
             </div>
         </div>
     </div>
+
     <!-- Edit Product Modal -->
     <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -317,43 +324,64 @@
                 <form id="editProductForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
                     <div class="modal-header">
                         <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <!-- Form Fields -->
-                        <input type="hidden" id="editProductId">
 
+                    <div class="modal-body">
+                        <!-- Hidden ID -->
+                        <input type="hidden" id="editProductId" name="id">
+
+                        <!-- Product Name -->
                         <div class="mb-3">
                             <label for="editName" class="form-label">Product Name</label>
                             <input type="text" class="form-control" name="name" id="editName" required>
                         </div>
 
+                        <!-- Price -->
                         <div class="mb-3">
                             <label for="editPrice" class="form-label">Price</label>
                             <input type="number" class="form-control" name="price" id="editPrice" required>
                         </div>
 
+                        <!-- Description -->
                         <div class="mb-3">
                             <label for="editDescription" class="form-label">Description</label>
                             <textarea class="form-control" name="description" id="editDescription" rows="3"></textarea>
                         </div>
-                         <div class="mb-3">
-                            <label for="editStatus" class="form-label">Status</label>
-                            <select class="form-control" name="status" id="editStatus">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
+
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label for="editCategory" class="form-label">Category</label>
+                            <select class="form-control" name="category_id" id="editCategory" required>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-control" name="status" id="editStatus" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <!-- Image Upload -->
                         <div class="mb-3">
                             <label for="editImage" class="form-label">Image</label>
                             <input type="file" class="form-control" name="image" id="editImage">
-                        </div>
 
-                       
+                            <!-- Old Image Preview -->
+                            <img id="currentImagePreview" src="" alt="Current Image"
+                                style="max-width: 120px; margin-top:10px; display:none;">
+                        </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Update Product</button>
                     </div>
@@ -363,61 +391,85 @@
     </div>
 
 
+    @push('scripts')
+        <!-- Select2 JS include (agar nahi kiya toh) -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <script>
-        function toggleDropdown(button) {
-            // Close all other dropdowns
-            document.querySelectorAll('.dropdown').forEach(drop => {
-                if (drop !== button.parentElement) {
-                    drop.classList.remove('show');
+        <script>
+            function toggleDropdown(button) {
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+                const menu = button.nextElementSibling;
+                menu.classList.toggle('show');
+            }
+
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
                 }
             });
 
-            // Toggle current dropdown
-            const dropdown = button.parentElement;
-            dropdown.classList.toggle('show');
-        }
-
-        // Close dropdown if clicked outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown').forEach(drop => {
-                    drop.classList.remove('show');
+            // Add Product Modal: Select2 initialize
+            $('#addProductModal').on('shown.bs.modal', function () {
+                // Destroy if already initialized
+                if ($('#tags').hasClass("select2-hidden-accessible")) {
+                    $('#tags').select2('destroy');
+                }
+                $('#tags').select2({
+                    dropdownParent: $('#addProductModal'),
+                    placeholder: "Select Tags",
+                    allowClear: true
                 });
+            });
+
+            // Edit Product Modal: Select2 initialize
+            $('#editProductModal').on('shown.bs.modal', function () {
+                if ($('#editTags').length) {
+                    if ($('#editTags').hasClass("select2-hidden-accessible")) {
+                        $('#editTags').select2('destroy');
+                    }
+                    $('#editTags').select2({
+                        dropdownParent: $('#editProductModal'),
+                        placeholder: "Select Tags",
+                        allowClear: true
+                    });
+                }
+            });
+
+            function openEditModal(product) {
+                const form = document.getElementById('editProductForm');
+                form.action = `/admin/product/${product.id}`;
+                document.getElementById('editProductId').value = product.id;
+                document.getElementById('editName').value = product.name;
+                document.getElementById('editPrice').value = product.price;
+                document.getElementById('editDescription').value = product.description || '';
+                document.getElementById('editStatus').value = product.status;
+
+                // Tags set karen (agar tags hain)
+                if (product.tags && Array.isArray(product.tags)) {
+                    setTimeout(() => {
+                        $('#editTags').val(product.tags.map(tag => tag.id)).trigger('change');
+                    }, 200);
+                }
+
+                const imagePreview = document.getElementById('currentImagePreview');
+                if (product.image) {
+                    imagePreview.src = `/storage/${product.image}`;
+                    imagePreview.style.display = 'block';
+                } else {
+                    imagePreview.style.display = 'none';
+                }
+                const openDropdown = document.querySelector('.dropdown-menu.show');
+                if (openDropdown) {
+                    openDropdown.classList.remove('show');
+                }
+                const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+                modal.show();
             }
-        });
-    </script>
-    <script>
-        function openEditModal(product) {
-            // Set form action dynamically
-            const form = document.getElementById('editProductForm');
-            form.action = `/admin/product/${product.id}`;
-
-            // Fill values
-            document.getElementById('editProductId').value = product.id;
-            document.getElementById('editName').value = product.name;
-            document.getElementById('editPrice').value = product.price;
-            document.getElementById('editDescription').value = product.description;
-            document.getElementById('editStatus').value = product.status;
-            if (product.image) {
-        const imagePreview = document.getElementById('currentImagePreview');
-        if (imagePreview) {
-            imagePreview.src = `/storage/${product.image}`;
-            imagePreview.style.display = 'block';
-        }
-    }
-
-            // Show the modal
-            const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
-            modal.show();
-        }
-    </script>
-   {{-- <script>
-    $(document).ready(function() {
-        $('.select2').select2({
-            placeholder: "Select tags",
-            allowClear: true
-        });
-    });
-</script> --}}
+        </script>
+    @endpush
 @endsection

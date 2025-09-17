@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     //
+    protected $fillable = ['name' , 'status' ];
     public function products()
-{
-    return $this->hasMany(Product::class, 'tag_id');
-}
-
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }
