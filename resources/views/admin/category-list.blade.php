@@ -360,7 +360,7 @@
                         const imgPreview = document.getElementById('view_imagePreview').querySelector(
                             "img");
                         if (this.dataset.image) {
-                            imgPreview.src = "/images/" + this.dataset.image;
+                            imgPreview.src = "/storage/" + this.dataset.image;
                         } else {
                             imgPreview.src = "https://via.placeholder.com/150x100?text=No+Image";
                         }

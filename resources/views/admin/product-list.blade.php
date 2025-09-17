@@ -12,10 +12,10 @@
 
         <style>
             /* body {
-                                                                                                                                                                      font-family: 'Inter', sans-serif;
-                                                                                                                                                                      background-color: #f9f9f9;
-                                                                                                                                                                      padding: 30px;
-                                                                                                                                                                    } */
+                                                                                                                                                                                                                  font-family: 'Inter', sans-serif;
+                                                                                                                                                                                                                  background-color: #f9f9f9;
+                                                                                                                                                                                                                  padding: 30px;
+                                                                                                                                                                                                                } */
 
             h2 {
                 font-size: 24px;
@@ -209,11 +209,26 @@
                                 <div class="dropdown">
                                     <button class="action-btn" onclick="toggleDropdown(this)">⋮</button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="">View</a></li>
-                                        <li> <button type="button" class="btn btn-link p-0 m-0 text-start"
+                                        <li>
+                                            <a href="#" class="dropdown-item viewProductBtn"
+                                                data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                                data-price="{{ $product->price }}"
+                                                data-description="{{ $product->description }}"
+                                                data-status="{{ $product->status }}" {{-- @foreach ($categories as $cat)
+                                                data-category="{{ $product->cat->name ?? 'N/A' }}"
+                                                    
+                                                @endforeach --}}
+                                                data-image="{{ $product->image }}"
+                                                data-created="{{ $product->created_at }}">
+                                                View
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn btn-link p-0 m-0 text-start"
                                                 onclick="openEditModal({{ $product }})">
                                                 Edit
-                                            </button></li>
+                                            </button>
+                                        </li>
                                         <li>
                                             <form action="{{ route('admin.product.delete', $product->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this product?')">
@@ -257,15 +272,30 @@
                             <label class="form-label">Product Name</label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">SKU</label>
+                            <input type="text" name="sku" class="form-control" required>
+                        </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Price</label>
+                            <label class="form-label">Regular Price</label>
                             <input type="number" name="price" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sale Price</label>
+                            <input type="number" name="sale_price" class="form-control" min="0" step="0.01">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Description</label>
                             <textarea name="description" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock Availability</label>
+                            <select name="in_stock" class="form-control" required>
+                                <option value="1">In Stock</option>
+                                <option value="0">Out of Stock</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="status">Category</label>
@@ -318,7 +348,8 @@
     </div>
 
     <!-- Edit Product Modal -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form id="editProductForm" method="POST" enctype="multipart/form-data">
@@ -361,6 +392,14 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="tags">Tags</label>
+                            <select name="tags[]" id="editTags" class="form-control" multiple>
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <!-- Status -->
                         <div class="mb-3">
@@ -390,6 +429,40 @@
         </div>
     </div>
 
+    <!-- View Product Modal -->
+    <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewProductLabel">Product Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div id="view_productImagePreview" style="margin-bottom:15px;">
+                                <img src="" alt="Product Image" class="img-fluid rounded"
+                                    style="max-height:200px;">
+                            </div>
+                            <h5 class="card-title" id="view_productName"></h5>
+                            <p><strong>Description:</strong></p>
+                            <p class="card-text" id="view_productDescription"></p>
+                            <p><strong>Price:</strong> <span id="view_productPrice"></span></p>
+
+                            <p><strong>Status:</strong> <span id="view_productStatus"></span></p>
+                            <p><strong>Created At:</strong> <span id="view_productCreated"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
 
     @push('scripts')
         <!-- Select2 JS include (agar nahi kiya toh) -->
@@ -414,26 +487,26 @@
             });
 
             // Add Product Modal: Select2 initialize
-            $('#addProductModal').on('shown.bs.modal', function () {
+            $('#addProductModal').on('shown.bs.modal', function() {
                 // Destroy if already initialized
                 if ($('#tags').hasClass("select2-hidden-accessible")) {
                     $('#tags').select2('destroy');
                 }
                 $('#tags').select2({
-                    dropdownParent: $('#addProductModal'),
+                    dropdownParent: $('#addProductModal .modal-content'),
                     placeholder: "Select Tags",
                     allowClear: true
                 });
             });
 
             // Edit Product Modal: Select2 initialize
-            $('#editProductModal').on('shown.bs.modal', function () {
+            $('#editProductModal').on('shown.bs.modal', function() {
                 if ($('#editTags').length) {
                     if ($('#editTags').hasClass("select2-hidden-accessible")) {
                         $('#editTags').select2('destroy');
                     }
                     $('#editTags').select2({
-                        dropdownParent: $('#editProductModal'),
+                        dropdownParent: $('#editProductModal .modal-content'),
                         placeholder: "Select Tags",
                         allowClear: true
                     });
@@ -449,13 +522,24 @@
                 document.getElementById('editDescription').value = product.description || '';
                 document.getElementById('editStatus').value = product.status;
 
-                // Tags set karen (agar tags hain)
                 if (product.tags && Array.isArray(product.tags)) {
-                    setTimeout(() => {
-                        $('#editTags').val(product.tags.map(tag => tag.id)).trigger('change');
-                    }, 200);
-                }
+                    // Agar relation se tags aaye hain
+                    $('#editTags').val(product.tags.map(tag => tag.id)).trigger('change');
+                } else if (product.tag_ids) {
+                    let selectedTags = [];
 
+                    if (typeof product.tag_ids === "string") {
+                        try {
+                            selectedTags = JSON.parse(product.tag_ids); // "[1,2]" -> [1,2]
+                        } catch (e) {
+                            console.error("Invalid JSON in tag_ids", product.tag_ids);
+                        }
+                    } else if (Array.isArray(product.tag_ids)) {
+                        selectedTags = product.tag_ids;
+                    }
+
+                    $('#editTags').val(selectedTags).trigger('change');
+                }
                 const imagePreview = document.getElementById('currentImagePreview');
                 if (product.image) {
                     imagePreview.src = `/storage/${product.image}`;
@@ -470,6 +554,48 @@
                 const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
                 modal.show();
             }
+        </script>
+        {{--  View Product Modal Script --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const viewProductModal = new bootstrap.Modal(document.getElementById('viewProductModal'));
+
+                document.querySelectorAll('.viewProductBtn').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        document.getElementById('view_productName').innerText = this.dataset.name;
+                        document.getElementById('view_productPrice').innerText = this.dataset.price;
+                        document.getElementById('view_productDescription').innerText = this.dataset
+                            .description || 'No description';
+                        // document.getElementById('view_productCategory').innerText = this.dataset
+                        //     .category;
+                        document.getElementById('view_productStatus').innerText = this.dataset.status;
+                        document.getElementById('view_productCreated').innerText = this.dataset.created;
+
+                        const createdDate = new Date(this.dataset.created); // dataset me timestamp
+                        const options = {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        };
+                        document.getElementById('view_productCreated').innerText = createdDate
+                            .toLocaleDateString('en-US', options);
+
+                        const imgPreview = document.getElementById('view_productImagePreview')
+                            .querySelector("img");
+                        if (this.dataset.image) {
+                            imgPreview.src = "/storage/" + this.dataset.image;
+                        } else {
+                            imgPreview.src = "https://via.placeholder.com/200x150?text=No+Image";
+                        }
+
+                        viewProductModal.show();
+                    });
+                });
+            });
         </script>
     @endpush
 @endsection
