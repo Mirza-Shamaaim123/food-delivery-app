@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('frontend.index')->name('index');
 // });
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
+Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/account/register', [AccountController::class, 'registration'])->name('account.register');
 Route::post('/account/process-register', [AccountController::class, 'processRegistration'])->name('account.processRegistration');
 Route::post('/account/authenticate', [AccountController::class, 'authenticate'])->name('account.authenticate');

@@ -12,10 +12,10 @@
 
         <style>
             /* body {
-                                                                                                                                                                                                                  font-family: 'Inter', sans-serif;
-                                                                                                                                                                                                                  background-color: #f9f9f9;
-                                                                                                                                                                                                                  padding: 30px;
-                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                  font-family: 'Inter', sans-serif;
+                                                                                                                                                                                                                                  background-color: #f9f9f9;
+                                                                                                                                                                                                                                  padding: 30px;
+                                                                                                                                                                                                                                } */
 
             h2 {
                 font-size: 24px;
@@ -111,6 +111,8 @@
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
                 padding: 8px 0;
+                text-align: center;
+                /* sab text center */
             }
 
             /* Show dropdown */
@@ -133,11 +135,14 @@
                 background: none;
                 border: none;
                 width: 100%;
-                text-align: left;
+                /* text-align: left; */
                 font-family: inherit;
                 font-size: 14px;
                 cursor: pointer;
                 padding: 4px 0;
+                display: flex;
+                justify-content: center;
+                /* horizontally center */
             }
 
             /* Hover effect */
@@ -170,7 +175,7 @@
                         <th>ID</th>
                         <th>NAME</th>
                         <th>PRICE</th>
-                        <th>DESCRIPTION</th>
+                        <th>STOCK</th>
                         <th>IMAGE</th>
                         <th>STATUS</th>
                         <th>CREATED AT</th>
@@ -180,10 +185,17 @@
                 <tbody>
                     @foreach ($products as $product)
                         <tr>
-                            <td>{{ $product->id }}</td>
+                            <td>{{ $products->firstItem() + $loop->index }}</td>
                             <td>{{ $product->name }}</td>
                             <td>Rs. {{ number_format($product->price, 2) }}</td>
-                            <td>{{ $product->description }}</td>
+                            <td>
+                            @if ($product->in_stock == 1)
+                             <span class="badge bg-success">In Stock</span>
+                             @else
+                             <span class="badge bg-danger">Out of Stock</span>
+                            @endif
+                            </td>
+                            {{-- <td>{{ $product->description }}</td> --}}
                             <td>
                                 @if ($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" width="80" height="80"
@@ -206,25 +218,21 @@
                             @endif --}}
                             <td>{{ $product->created_at->format('d-m-Y') }}</td>
                             <td class="position-relative">
-                                <div class="dropdown">
+                                <div class="dropdown text-center"> {{-- ✅ Center align --}}
                                     <button class="action-btn" onclick="toggleDropdown(this)">⋮</button>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu text-center"> {{-- ✅ text-center added --}}
                                         <li>
                                             <a href="#" class="dropdown-item viewProductBtn"
                                                 data-id="{{ $product->id }}" data-name="{{ $product->name }}"
                                                 data-price="{{ $product->price }}"
                                                 data-description="{{ $product->description }}"
-                                                data-status="{{ $product->status }}" {{-- @foreach ($categories as $cat)
-                                                data-category="{{ $product->cat->name ?? 'N/A' }}"
-                                                    
-                                                @endforeach --}}
-                                                data-image="{{ $product->image }}"
+                                                data-status="{{ $product->status }}" data-image="{{ $product->image }}"
                                                 data-created="{{ $product->created_at }}">
                                                 View
                                             </a>
                                         </li>
                                         <li>
-                                            <button type="button" class="btn btn-link p-0 m-0 text-start"
+                                            <button type="button" class="btn btn-link p-0 m-0 dropdown-item"
                                                 onclick="openEditModal({{ $product }})">
                                                 Edit
                                             </button>
@@ -235,12 +243,15 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="btn btn-link text-danger p-0 m-0">Delete</button>
+                                                    class="btn btn-link text-danger p-0 m-0 dropdown-item">
+                                                    Delete
+                                                </button>
                                             </form>
                                         </li>
                                     </ul>
                                 </div>
                             </td>
+
 
                         </tr>
                     @endforeach
@@ -249,6 +260,7 @@
 
                 </tbody>
             </table>
+            {{ $products->links() }}
         </div>
 
     </body>
@@ -316,14 +328,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-
-
-
-
-
-
-
                         <div class="mb-3">
                             <label for="status">Status</label>
                             <select name="status" class="form-control" required>
@@ -370,17 +374,35 @@
                             <label for="editName" class="form-label">Product Name</label>
                             <input type="text" class="form-control" name="name" id="editName" required>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">SKU</label>
+                            <input type="text" id="editSku" name="sku" class="form-control" required>
+                        </div>
 
                         <!-- Price -->
                         <div class="mb-3">
-                            <label for="editPrice" class="form-label">Price</label>
-                            <input type="number" class="form-control" name="price" id="editPrice" required>
+                            <label for="editPrice" class="form-label">Regular Price</label>
+                            <input type="number" class="form-control" id="editPrice" name="price" required>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Sale Price</label>
+                            <input type="number" id="editSalePrice" name="sale_price" class="form-control" min="0" step="0.01">
+                        </div>
+
 
                         <!-- Description -->
                         <div class="mb-3">
                             <label for="editDescription" class="form-label">Description</label>
-                            <textarea class="form-control" name="description" id="editDescription" rows="3"></textarea>
+                            <textarea class="form-control"   name="description" id="editDescription" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Stock Availability</label>
+                            <select name="in_stock" id="editInStock" class="form-control" required>
+                                <option value="1">In Stock</option>
+                                <option value="0">Out of Stock</option>
+                            </select>
                         </div>
 
                         <!-- Category -->
@@ -516,30 +538,32 @@
             function openEditModal(product) {
                 const form = document.getElementById('editProductForm');
                 form.action = `/admin/product/${product.id}`;
+
                 document.getElementById('editProductId').value = product.id;
                 document.getElementById('editName').value = product.name;
+                document.getElementById('editSku').value = product.sku; // ✅ SKU set
                 document.getElementById('editPrice').value = product.price;
+                document.getElementById('editSalePrice').value = product.sale_price; // ✅ Sale Price set
                 document.getElementById('editDescription').value = product.description || '';
                 document.getElementById('editStatus').value = product.status;
+                document.getElementById('editInStock').value = product.in_stock; // ✅ In Stock set
 
                 if (product.tags && Array.isArray(product.tags)) {
-                    // Agar relation se tags aaye hain
                     $('#editTags').val(product.tags.map(tag => tag.id)).trigger('change');
                 } else if (product.tag_ids) {
                     let selectedTags = [];
-
                     if (typeof product.tag_ids === "string") {
                         try {
-                            selectedTags = JSON.parse(product.tag_ids); // "[1,2]" -> [1,2]
+                            selectedTags = JSON.parse(product.tag_ids);
                         } catch (e) {
                             console.error("Invalid JSON in tag_ids", product.tag_ids);
                         }
                     } else if (Array.isArray(product.tag_ids)) {
                         selectedTags = product.tag_ids;
                     }
-
                     $('#editTags').val(selectedTags).trigger('change');
                 }
+
                 const imagePreview = document.getElementById('currentImagePreview');
                 if (product.image) {
                     imagePreview.src = `/storage/${product.image}`;
@@ -547,10 +571,12 @@
                 } else {
                     imagePreview.style.display = 'none';
                 }
+
                 const openDropdown = document.querySelector('.dropdown-menu.show');
                 if (openDropdown) {
                     openDropdown.classList.remove('show');
                 }
+
                 const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
                 modal.show();
             }

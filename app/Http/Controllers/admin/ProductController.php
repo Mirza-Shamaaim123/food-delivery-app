@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +15,7 @@ class ProductController extends Controller
     //
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(5);
         $categories = Category::all();
         $tags = Tag::all();
         // dd($tags);
@@ -48,7 +49,7 @@ class ProductController extends Controller
                 $path = $request->file('image')->store('images/products', 'public');
                 $product->image = $path;
             }
-            $product->tag_ids = $request->tags; // ✅ Store tag_ids as JSON
+            $product->tag_ids = json_encode($request->tags);
             $product->save();
 
             // $product->tags()->sync($request->tags);
@@ -56,33 +57,51 @@ class ProductController extends Controller
                 ->with('success', 'Product added successfully.');
         }
     }
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'status' => 'required|in:active,inactive',
-            'tags' => 'nullable|array', // multiple tags
-            'tags.*' => 'exists:tags,id', // har tag_id tags table me hona chahiye
-        ]);
-        $product = Product::findOrFail($id);
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->description = $request->description;
-        $product->category_id = $request->category_id;
-        $product->status = $request->status;
-        $product->tag_id = json_encode($request->tags);
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images/products', 'public');
-            $product->image = $path;
+   public function update(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'sku' => 'required|string|unique:products,sku,' . $id, // ✅ same product allow
+        'price' => 'required|numeric',
+        'sale_price' => 'nullable|numeric|lt:price', // ✅ sale price less than price
+        'in_stock' => 'required|boolean', // ✅ 1 = in stock, 0 = out of stock
+        'description' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'category_id' => 'required|exists:categories,id',
+        'status' => 'required|in:active,inactive',
+        'tags' => 'nullable|array',
+        'tags.*' => 'exists:tags,id',
+    ]);
+
+    $product = Product::findOrFail($id);
+
+    $product->name = $request->name;
+    $product->sku = $request->sku;
+    $product->price = $request->price;
+    $product->sale_price = $request->sale_price;
+    $product->in_stock = $request->in_stock;
+    $product->description = $request->description;
+    $product->category_id = $request->category_id;
+    $product->status = $request->status;
+    $product->tag_ids = json_encode($request->tags);
+
+    // ✅ image update logic
+    if ($request->hasFile('image')) {
+        // purani image delete karna
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
-        $product->save();
-        return redirect()->route('admin.productlist')
-            ->with('success', 'Product updated successfully.');
+
+        // nayi image upload karna
+        $path = $request->file('image')->store('images/products', 'public');
+        $product->image = $path;
     }
+
+    $product->save();
+
+    return redirect()->route('admin.productlist')
+        ->with('success', 'Product updated successfully.');
+}
 
     public function destroy($id)
     {

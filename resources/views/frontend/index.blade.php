@@ -108,32 +108,41 @@
     </div>
     <section class="food-sec-1 space bg-smoke overflow-hidden">
         <div class="container">
-            <div class="row gy-40">
-                <div class="title-area text-center mb-60"><span class="sub-title text-anime-style-1">Our Fast
-                        Foods</span>
-                    <h2 class="sec-title text-anime-style-2">Our Delicious Fast <span class="text-theme">Foods</span>
-                    </h2><img class="img-anime-style-1" src="assets/img/icon/title-shape.png" alt="img">
-                </div>
-            </div>
-            <div class="row gy-30">
-                <div class="col-xl-3 col-lg-6 col-md-6">
-                    <div class="food-card-1 wow fadeinleft" data-wow-delay=".2s">
-                        <div class="thumb">
-                            <div class="food-mask" data-mask-src="assets/img/bg/menu-1-msk-bg.png"></div><img
-                                src="assets/img/food/food-1-1.png" alt="Image">
-                            <div class="actions"><a href="cart.html" class="icon-btn"><i
-                                        class="far fa-cart-plus"></i></a> <a href="wishlist.html" class="icon-btn"><i
-                                        class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="content">
-                            <h4 class="price">$26.00</h4>
-                            <h4 class="box-title"><a href="shop-details.html">Delicious Black Burger</a></h4>
-                            <p class="box-text">At the heart of our kitchen are bold flavors, high-quality ingredients
-                            </p>
-                        </div>
+           <div class="row gy-30">
+    @foreach ($products as $product)
+        <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="food-card-1 wow fadeinleft" data-wow-delay=".2s">
+                <div class="thumb">
+                    <div class="food-mask" data-mask-src="{{ asset('assets/img/bg/menu-1-msk-bg.png') }}"></div>
+                    
+                    @if ($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                    @else
+                        <img src="" alt="No Image">
+                    @endif
+
+                    <div class="actions">
+                        <a href="#" class="icon-btn">
+                            <i class="far fa-cart-plus"></i>
+                        </a>
+                        <a href="#" class="icon-btn">
+                            <i class="far fa-heart"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="content">
+                    <h4 class="price">${{ $product->sale_price ?? $product->price }}</h4>
+                    <h4 class="box-title">
+                        <a href="#">{{ $product->name }}</a>
+                    </h4>
+                    <p class="box-text">{{ Str::limit($product->description, 60) }}</p>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+                {{--<div class="col-xl-3 col-lg-6 col-md-6">
                     <div class="food-card-1 wow fadeinleft" data-wow-delay=".4s">
                         <div class="thumb">
                             <div class="food-mask" data-mask-src="assets/img/bg/menu-1-msk-bg.png"></div><img
@@ -158,8 +167,8 @@
                             <div class="actions"><a href="cart.html" class="icon-btn"><i
                                         class="far fa-cart-plus"></i></a> <a href="wishlist.html" class="icon-btn"><i
                                         class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="content">
+                        </div> --}}
+                        {{-- <div class="content">
                             <h4 class="price">$16.00</h4>
                             <h4 class="box-title"><a href="shop-details.html">Golden Crispy Fries</a></h4>
                             <p class="box-text">At the heart of our kitchen are bold flavors, high-quality ingredients
@@ -175,8 +184,8 @@
                             <div class="actions"><a href="cart.html" class="icon-btn"><i
                                         class="far fa-cart-plus"></i></a> <a href="wishlist.html" class="icon-btn"><i
                                         class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="content">
+                        </div> --}}
+                        {{-- <div class="content">
                             <h4 class="price">$36.00</h4>
                             <h4 class="box-title"><a href="shop-details.html">Tangy Grilled Sandwich</a></h4>
                             <p class="box-text">At the heart of our kitchen are bold flavors, high-quality ingredients
@@ -184,8 +193,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>--}}
+        </div> 
     </section>
     <div class="history-sec1 bg-theme2 overflow-hidden" id="history-sec"><img class="round-shape-bottom"
             src="assets/img/shape/shape-bottom.png" alt="img">
@@ -1049,4 +1058,6 @@
             </div>
         </div>
     </section>
+   
+</script>
 @endsection

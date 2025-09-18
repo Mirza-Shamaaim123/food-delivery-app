@@ -38,6 +38,10 @@
    <!-- Apex Chart -->
    <script src="{{ asset('dashboard_assets/vendor/apexchart/apexchart.js') }}"></script>
 
+   <!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
    <!-- Dashboard 1 -->
    <script src="{{ asset('dashboard_assets/js/dashboard/dashboard-1.js') }}"></script>
    <!-- Bootstrap JS Bundle (includes Popper) -->

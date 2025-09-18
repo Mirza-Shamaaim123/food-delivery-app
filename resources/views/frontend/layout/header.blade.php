@@ -145,7 +145,7 @@
                             <li><a href="blog-details.html">Blog Details</a></li>
                         </ul>
                     </li>
-                    <li><a href="contact.html">CONTACT</a></li>
+                    <li><a href="{{ route('home.contact') }}">CONTACT</a></li>
                 </ul>
             </div>
         </div>
@@ -185,6 +185,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="sticky-wrapper">
             <div class="menu-area">
                 <div class="container">
@@ -196,10 +197,10 @@
                         <div class="col-auto">
                             <nav class="main-menu d-none d-lg-inline-block">
                                 <ul>
-                                    <li class="menu-item-has-children"><a href="index.html">HOME</a>
+                                    <li ><a href="{{ route('home')}}">HOME</a>
 
                                     </li>
-                                    <li><a href="about.html">ABOUT</a></li>
+                                    <li><a href="{{ route('home.about') }}">ABOUT</a></li>
                                     <li class="menu-item-has-children"><a href="#">MENU</a>
                                         <ul class="sub-menu">
                                             <li><a href="menu-grid.html">Menu grid</a></li>
@@ -232,7 +233,7 @@
                                             <li><a href="blog-details.html">Blog Details</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="contact.html">CONTACT</a></li>
+                                    <li><a href="{{ route('home.contact') }}">CONTACT</a></li>
                                 </ul>
                             </nav>
                             <div class="header-button d-flex d-lg-none">

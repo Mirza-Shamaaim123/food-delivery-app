@@ -17,9 +17,9 @@ class CategoryController extends Controller
     //
     public function index()
     {
-        $category = Category::orderBy('id', 'desc')->get();
-
-        return view('admin.category-list', compact('category'));
+        $categories = Category::orderBy('id', 'desc')->paginate(5);
+        //    $categories->;
+        return view('admin.category-list', compact('categories'));
     }
     // public function add()
     // {
@@ -44,7 +44,7 @@ class CategoryController extends Controller
             $category->available_items = $request->available_items; // ✅ Save available_items
             $category->status = $request->status; // 👈 yahan "active" / "inactive" save hoga
 
-          if ($request->hasFile('image')) {
+            if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('images/category', 'public');
                 $category->image = $path; // stored as "images/category/filename.jpg"
             }
@@ -59,11 +59,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit($id)
-    {
-        $category = Category::find($id);
-        return view('admin.category-edit', compact('category'));
-    }
+    // public function edit($id)
+    // {
+    //     $category = Category::find($id);
+    //     return view('admin.category-edit', compact('category'));
+    // }
     public function updatecategory(Request $request, $id)
     {
         $request->validate([
@@ -80,33 +80,41 @@ class CategoryController extends Controller
         $category->description = $request->description;
         $category->status = $request->status;
         $category->available_items = $request->available_items;
-       if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('images/category', 'public');
-                $category->image = $path; 
+        // ✅ Agar nayi image upload hui hai
+        if ($request->hasFile('image')) {
+
+            // Purani image delete kar do
+            if ($category->image && Storage::disk('public')->exists($category->image)) {
+                Storage::disk('public')->delete($category->image);
             }
+
+            // Nayi image save karo
+            $path = $request->file('image')->store('images/category', 'public');
+            $category->image = $path;
+        }
+
 
         $category->save();
 
         return redirect()->route('admin.categorylist')
             ->with('success', 'Category updated successfully.');
     }
-
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
 
-        // agar image exist karti hai to delete kar do
-        if ($category->image && File::exists(public_path('images/' . $category->image))) {
-            @unlink(public_path('images/' . $category->image));
+        if ($category->image && Storage::disk('public')->exists($category->image)) {
+            Storage::disk('public')->delete($category->image);
         }
 
         $category->delete();
 
-        return redirect()->route('admin.categorylist')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categorylist')
+            ->with('success', 'Category deleted successfully.');
     }
-    public function view($id)
-    {
-        $category = Category::find($id);
-        return view('admin.view', compact('category'));
-    }
+    // public function view($id)
+    // {
+    //     $category = Category::find($id);
+    //     return view('admin.view', compact('category'));
+    // }
 }

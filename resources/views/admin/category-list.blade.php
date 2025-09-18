@@ -34,9 +34,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($category as $cat)
+                @foreach ($categories as $cat)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                         <td>{{ $categories->firstItem() + $loop->index }}</td>
                         <td>{{ $cat->name }}</td>
                         <td>{{ $cat->available_items }}</td>
 
@@ -97,7 +97,7 @@
                 @endforeach
             </tbody>
         </table>
-
+        {{ $categories->links() }}
         <!-- Add Category Modal -->
         <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
             aria-hidden="true">
