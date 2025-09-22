@@ -54,7 +54,8 @@ class ProductController extends Controller
                 $path = $request->file('image')->store('images/products', 'public');
                 $product->image = $path;
             }
-            $product->tag_ids = json_encode($request->tags);
+            // $product->tag_ids = json_encode($request->tags);
+            $product->tag_ids = $request->tags;
             $product->save();
 
             // $product->tags()->sync($request->tags);

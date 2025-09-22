@@ -211,7 +211,7 @@
                                         <ul class="sub-menu">
                                             <li class="menu-item-has-children"><a href="#">Shop</a>
                                                 <ul class="sub-menu">
-                                                    <li><a href="shop.html">Shop</a></li>
+                                                    <li><a href="{{ route('frontend.shop') }}">Shop</a></li>
                                                     <li><a href="shop-details.html">Shop Details</a></li>
                                                     <li><a href="cart.html">Cart Page</a></li>
                                                     <li><a href="checkout.html">Checkout</a></li>

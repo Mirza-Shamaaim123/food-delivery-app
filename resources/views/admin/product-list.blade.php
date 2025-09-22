@@ -12,9 +12,9 @@
 
         <style>
             /* body {
-                                                                                                                                                                                                                                              font-family: 'Inter', sans-serif;
-                                                                                                                                                                                                                                              background-color: #f9f9f9;
-                                                                                                                                                                                                                                              padding: 30px;
+     font-family: 'Inter', sans-serif;
+                                                                                                                                                                                                                                                  background-color: #f9f9f9;
+                                                                                                                                                                                                                                                  padding: 30px;
                                                                                                                                                                                                                                             } */
 
             h2 {

@@ -16,10 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
+Route::get('/shop', [FrontendController::class, 'shop'])->name('frontend.shop');
+Route::get('/shop/details/{id}', [FrontendController::class, 'details'])->name('frontend.shop.details');
 Route::get('/account/register', [AccountController::class, 'registration'])->name('account.register');
 Route::post('/account/process-register', [AccountController::class, 'processRegistration'])->name('account.processRegistration');
 Route::post('/account/authenticate', [AccountController::class, 'authenticate'])->name('account.authenticate');
 Route::get('/account/login', [AccountController::class, 'login'])->name('account.login');
+
 //              Category view in frontend
 Route::get('/home', [FrontendController::class, 'index'])->name('frontend.index');
             //      ADMIN ROUTES

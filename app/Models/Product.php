@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Tag;  // Ensure Tag model import ho
 
 class Product extends Model
 {
@@ -21,6 +22,7 @@ class Product extends Model
         'availability',
         'status',
         'category_id',
+       
         
     ];
     protected $casts = [
@@ -41,8 +43,14 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
+
+
+public function getTagsAttribute()
+{
+    return Tag::whereIn('id', $this->tag_ids ?? [])->get();
+}
+
+
+
+
 }
