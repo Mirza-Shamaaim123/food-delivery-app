@@ -12,10 +12,10 @@
 
         <style>
             /* body {
-                                                                                                                                                                                                                                  font-family: 'Inter', sans-serif;
-                                                                                                                                                                                                                                  background-color: #f9f9f9;
-                                                                                                                                                                                                                                  padding: 30px;
-                                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                              font-family: 'Inter', sans-serif;
+                                                                                                                                                                                                                                              background-color: #f9f9f9;
+                                                                                                                                                                                                                                              padding: 30px;
+                                                                                                                                                                                                                                            } */
 
             h2 {
                 font-size: 24px;
@@ -187,13 +187,15 @@
                         <tr>
                             <td>{{ $products->firstItem() + $loop->index }}</td>
                             <td>{{ $product->name }}</td>
+
                             <td>Rs. {{ number_format($product->price, 2) }}</td>
+
                             <td>
-                            @if ($product->in_stock == 1)
-                             <span class="badge bg-success">In Stock</span>
-                             @else
-                             <span class="badge bg-danger">Out of Stock</span>
-                            @endif
+                                @if ($product->in_stock == 1)
+                                    <span class="badge bg-success">In Stock</span>
+                                @else
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                @endif
                             </td>
                             {{-- <td>{{ $product->description }}</td> --}}
                             <td>
@@ -299,6 +301,27 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">Is this product on sale?</label>
+                            <div>
+                                <input type="radio" id="sale_yes" name="sale_status" value="Yes">
+                                <label for="sale_yes">Yes</label>
+
+                                <input type="radio" id="sale_no" name="sale_status" value="No" checked>
+                                <label for="sale_no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="is_featured" class="form-label">Is Featured on Homepage?</label>
+                            <select name="is_featured_on_homepage" id="is_featured_on_homepage" class="form-control"
+                                required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+
+
+                        <div class="mb-3">
                             <label class="form-label">Description</label>
                             <textarea name="description" class="form-control"></textarea>
                         </div>
@@ -387,14 +410,32 @@
 
                         <div class="mb-3">
                             <label class="form-label">Sale Price</label>
-                            <input type="number" id="editSalePrice" name="sale_price" class="form-control" min="0" step="0.01">
+                            <input type="number" id="editSalePrice" name="sale_price" class="form-control"
+                                min="0" step="0.01">
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Is this product on sale?</label>
+                            <div>
+                                <input type="radio" id="sale_yes" name="sale_status" value="Yes">
+                                <label for="sale_yes">Yes</label>
 
+                                <input type="radio" id="sale_no" name="sale_status" value="No" checked>
+                                <label for="sale_no">No</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="is_featured" class="form-label">Is Featured on Homepage?</label>
+                            <select name="is_featured_on_homepage" id="is_featured_on_homepage" class="form-control"
+                                required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
 
                         <!-- Description -->
                         <div class="mb-3">
                             <label for="editDescription" class="form-label">Description</label>
-                            <textarea class="form-control"   name="description" id="editDescription" rows="3"></textarea>
+                            <textarea class="form-control" name="description" id="editDescription" rows="3"></textarea>
                         </div>
 
                         <div class="mb-3">
@@ -547,6 +588,9 @@
                 document.getElementById('editDescription').value = product.description || '';
                 document.getElementById('editStatus').value = product.status;
                 document.getElementById('editInStock').value = product.in_stock; // ✅ In Stock set
+                const isFeaturedSelect = document.getElementById('is_featured_on_homepage');
+                isFeaturedSelect.value = product.is_featured_on_homepage; // Set the value (Yes or No)
+
 
                 if (product.tags && Array.isArray(product.tags)) {
                     $('#editTags').val(product.tags.map(tag => tag.id)).trigger('change');

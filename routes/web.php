@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\admin\CouponController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -41,3 +42,9 @@ Route::get('/admin/tag', [TagController::class, 'index'])->name('admin.tag')->mi
 Route::post('/admin/tag', [TagController::class, 'store'])->name('admin.tag.store')->middleware([ 'admin_check']);
 Route::put('/admin/tag/{id}', [TagController::class, 'update'])->name('admin.tag.update')->middleware([ 'admin_check']);
 Route::delete('/admin/tag/{id}', [TagController::class, 'destroy'])->name('admin.tag.delete')->middleware([ 'admin_check']);
+//              Coupon Routes
+Route::get('/admin/coupons', [CouponController::class, 'index'])->name('admin.coupons')->middleware([ 'admin_check']);
+Route::post('/admin/coupons', [CouponController::class, 'store'])->name('admin.coupons.store')->middleware([ 'admin_check']);
+Route::put('/admin/coupons/{id}', [CouponController::class, 'update'])->name('admin.coupons.update')->middleware([ 'admin_check']);
+// Route::delete('/admin/coupons/{id}', [CouponController::class, 'destroy'])->name('admin.coupons.destroy')->middleware([ 'admin_check']);
+
