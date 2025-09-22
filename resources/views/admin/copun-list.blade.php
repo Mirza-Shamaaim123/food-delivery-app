@@ -46,7 +46,7 @@
                     </button>
 
                     <!-- Delete Button -->
-                    <form action="" method="POST" style="display:inline-block;">
+                    <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit"

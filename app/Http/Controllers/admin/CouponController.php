@@ -68,13 +68,13 @@ class CouponController extends Controller
             return redirect()->route('admin.coupons')->with('success', 'Coupon updated successfully.');
         };
     }
-    // public function destroy($id)
-    // {
-    //     $coupon = Coupon::find($id);
-    //     if ($coupon) {
-    //         $coupon->delete();
-    //         return redirect()->route('admin.coupons')->with('success', 'Coupon deleted successfully.');
-    //     }
-    //     return redirect()->route('admin.coupons')->with('error', 'Coupon not found.');
-    // }
+     public function destroy($id)
+    {
+        $coupon = Coupon::find($id);
+        if ($coupon) {
+            $coupon->delete();
+            return redirect()->route('admin.coupons')->with('success', 'Coupon deleted successfully.');
+        }
+        return redirect()->route('admin.coupons')->with('error', 'Coupon not found.');
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\admin\CouponController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -50,4 +51,10 @@ Route::get('/admin/coupons', [CouponController::class, 'index'])->name('admin.co
 Route::post('/admin/coupons', [CouponController::class, 'store'])->name('admin.coupons.store')->middleware([ 'admin_check']);
 Route::put('/admin/coupons/{id}', [CouponController::class, 'update'])->name('admin.coupons.update')->middleware([ 'admin_check']);
 // Route::delete('/admin/coupons/{id}', [CouponController::class, 'destroy'])->name('admin.coupons.destroy')->middleware([ 'admin_check']);
+Route::delete('/admin/coupons/{id}', [CouponController::class, 'destroy'])->name('admin.coupons.destroy')->middleware(['admin_check']);
+
+//              Review Routes
+Route::get('/admin/review', [ReviewController::class, 'index'])->name('admin.review')->middleware([ 'admin_check']);
+Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
+Route::post('/admin/review/status/{id}', [ReviewController::class, 'updateStatus'])->name('admin.review.status')->middleware('admin_check');
 

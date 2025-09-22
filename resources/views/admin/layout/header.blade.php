@@ -828,6 +828,12 @@
 							<span class="nav-text">Product</span>
 						</a>
 					</li>
+					<li>
+						<a class="" href="{{ route('admin.review') }}" aria-expanded="false">
+							<i class="flaticon-dashboard-1"></i>
+							<span class="nav-text">Reviews</span>
+						</a>
+					</li>
 						<li>
 						<a class="" href="{{ route('admin.coupons') }}" aria-expanded="false">
 							<i class="flaticon-dashboard-1"></i>
