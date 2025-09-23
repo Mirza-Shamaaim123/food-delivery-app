@@ -46,7 +46,7 @@
                     </button>
 
                     <!-- Delete Button -->
-                    <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST" style="display:inline-block;">
+                    <form action="{{ route('admin.coupons.destroy',   $coupon->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -65,6 +65,7 @@
         </tbody>
     </table>
 </div>
+
 
 <!-- Create Coupon Modal -->
 <div class="modal fade" id="createCouponModal" tabindex="-1" aria-labelledby="createCouponModalLabel"
@@ -101,6 +102,30 @@
                         <label class="form-label">Description</label>
                         <textarea class="form-control" name="description"></textarea>
                     </div>
+
+                    <!-- New Fields -->
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-control" name="status" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Usage Limit (Global)</label>
+                        <input type="number" class="form-control" name="usage_limit" placeholder="Leave empty for unlimited">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Per User Limit</label>
+                        <input type="number" class="form-control" name="per_user_limit" placeholder="Leave empty for unlimited">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Minimum Cart Amount</label>
+                        <input type="number" step="0.01" class="form-control" name="minimum_cart_amount" placeholder="e.g. 100.00">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -110,6 +135,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Edit Coupon Modal -->
 <div class="modal fade" id="editCouponModal" tabindex="-1" aria-hidden="true">

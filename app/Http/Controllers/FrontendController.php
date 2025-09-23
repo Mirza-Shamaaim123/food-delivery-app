@@ -21,10 +21,15 @@ class FrontendController extends Controller
     public function details($id){
        $product = Product::findOrFail($id);
        $tags= Tag::all();
-       
-    
+       $reviews = $product->reviews()->where('status', 'approved')->get();
 
-        return view('frontend.shop-details', compact('product', 'tags'));
+        return view('frontend.shop-details', compact('product', 'tags', 'reviews'));
+    }
+    public function cart(){
+        return view('frontend.cart');
+    }
+    public function checkout(){
+        return view('frontend.checkout');
     }
 
 }

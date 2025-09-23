@@ -50,6 +50,11 @@ public function getTagsAttribute()
     return Tag::whereIn('id', $this->tag_ids ?? [])->get();
 }
 
+public function reviews()
+{
+    return $this->hasMany(Review::class, 'product_id');
+}
+
 
 
 
