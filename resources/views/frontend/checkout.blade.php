@@ -39,7 +39,7 @@
                     </form>
                 </div>
             </div>
-            <div class="woocommerce-form-coupon-toggle">
+            {{-- <div class="woocommerce-form-coupon-toggle">
                 <div class="woocommerce-info">Have a coupon? <a href="#" class="showcoupon">Click here to enter your
                         code</a></div>
             </div>
@@ -52,7 +52,7 @@
                                 coupon</button></div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
             <form action="#" class="woocommerce-checkout mt-40">
                 <div class="row">
                     <div class="col-lg-6">

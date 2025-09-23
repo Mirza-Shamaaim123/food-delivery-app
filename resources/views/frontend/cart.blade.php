@@ -1,13 +1,26 @@
 @extends('frontend.layout.main')
+
 @section('content')
- <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
+    <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
         <div class="container">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col-lg-6">
                     <div class="breadcumb-content">
                         <h1 class="breadcumb-title">Cart Page</h1>
                         <ul class="breadcumb-menu">
-                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ route('frontend.shop') }}">Home</a></li>
                             <li>Cart Page</li>
                         </ul>
                     </div>
@@ -15,13 +28,11 @@
             </div>
         </div>
     </div>
+
     <div class="th-cart-wrapper space-top space-extra-bottom">
         <div class="container">
-            <div class="woocommerce-notices-wrapper">
-                <div class="woocommerce-message">Shipping costs updated.</div>
-            </div>
             <form action="#" class="woocommerce-cart-form">
-                <table class="cart_table">
+                <table class="cart_table table table-bordered">
                     <thead>
                         <tr>
                             <th class="cart-col-image">Image</th>
@@ -33,127 +44,152 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="cart_item">
-                            <td data-title="Product"><a class="cart-productimage" href="shop-details.html"><img
-                                        width="91" height="91" src="assets/img/product/product_1_1.png" alt="Image"></a>
-                            </td>
-                            <td data-title="Name"><a class="cart-productname" href="shop-details.html">Dumbbells</a>
-                            </td>
-                            <td data-title="Price"><span class="amount"><bdi><span>$</span>18</bdi></span></td>
-                            <td data-title="Quantity">
-                                <div class="quantity"><button class="quantity-minus qty-btn"><i
-                                            class="far fa-minus"></i></button> <input type="number" class="qty-input"
-                                        value="1" min="1" max="99"> <button class="quantity-plus qty-btn"><i
-                                            class="far fa-plus"></i></button></div>
-                            </td>
-                            <td data-title="Total"><span class="amount"><bdi><span>$</span>18</bdi></span></td>
-                            <td data-title="Remove"><a href="#" class="remove"><i class="fal fa-trash-alt"></i></a></td>
-                        </tr>
-                        <tr class="cart_item">
-                            <td data-title="Product"><a class="cart-productimage" href="shop-details.html"><img
-                                        width="91" height="91" src="assets/img/product/product_1_2.png" alt="Image"></a>
-                            </td>
-                            <td data-title="Name"><a class="cart-productname" href="shop-details.html">Leather Bag</a>
-                            </td>
-                            <td data-title="Price"><span class="amount"><bdi><span>$</span>18</bdi></span></td>
-                            <td data-title="Quantity">
-                                <div class="quantity"><button class="quantity-minus qty-btn"><i
-                                            class="far fa-minus"></i></button> <input type="number" class="qty-input"
-                                        value="1" min="1" max="99"> <button class="quantity-plus qty-btn"><i
-                                            class="far fa-plus"></i></button></div>
-                            </td>
-                            <td data-title="Total"><span class="amount"><bdi><span>$</span>18</bdi></span></td>
-                            <td data-title="Remove"><a href="#" class="remove"><i class="fal fa-trash-alt"></i></a></td>
-                        </tr>
-                        <tr class="cart_item">
-                            <td data-title="Product"><a class="cart-productimage" href="shop-details.html"><img
-                                        width="91" height="91" src="assets/img/product/product_1_3.png" alt="Image"></a>
-                            </td>
-                            <td data-title="Name"><a class="cart-productname" href="shop-details.html">Protein
-                                    Bottle</a></td>
-                            <td data-title="Price"><span class="amount"><bdi><span>$</span>18</bdi></span></td>
-                            <td data-title="Quantity">
-                                <div class="quantity"><button class="quantity-minus qty-btn"><i
-                                            class="far fa-minus"></i></button> <input type="number" class="qty-input"
-                                        value="1" min="1" max="99"> <button class="quantity-plus qty-btn"><i
-                                            class="far fa-plus"></i></button></div>
-                            </td>
-                            <td data-title="Total"><span class="amount"><bdi><span>$</span>18</bdi></span></td>
-                            <td data-title="Remove"><a href="#" class="remove"><i class="fal fa-trash-alt"></i></a></td>
-                        </tr>
+                        @forelse($cart as $id => $item)
+                            <tr class="cart_item" data-id="{{ $id }}">
+                                <td><img src="{{ asset('storage/' . $item['image']) }}" width="91" height="91"></td>
+                                <td>{{ $item['name'] }}</td>
+                                <td>${{ number_format($item['price'], 2) }}</td>
+                                <td>
+                                    <div class="quantity d-flex align-items-center">
+                                        <button type="button" class="btn btn-light update-cart"
+                                            data-action="decrease">-</button>
+                                        <input type="text" value="{{ $item['quantity'] }}"
+                                            class="form-control text-center mx-1 qty-input" style="width:60px;" readonly>
+                                        <button type="button" class="btn btn-danger update-cart"
+                                            data-action="increase">+</button>
+                                    </div>
+                                </td>
+                                <td class="item-total">${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                                <td>
+                                    <a href="{{ route('frontend.removeFromCart', $id) }}"
+                                        class="btn btn-sm btn-danger">Remove</a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Your cart is empty.</td>
+                            </tr>
+                        @endforelse
                         <tr>
                             <td colspan="6" class="actions">
-                                <div class="th-cart-coupon"><input type="text" class="form-control"
-                                        placeholder="Coupon Code..."> <button type="submit"
-                                        class="th-btn style2 style-radius">Apply Coupon</button></div><button
-                                    type="submit" class="th-btn style2 style-radius">Update cart</button> <a
-                                    href="shop.html" class="th-btn style3 style-radius">Continue Shopping</a>
+                                {{-- <div class="th-cart-coupon mb-3">
+                                    <form action="{{ route('frontend.applyCoupon') }}" method="POST" class="d-flex gap-2">
+                                        @csrf
+                                        <input type="text" name="coupon_code" class="form-control"
+                                            placeholder="Coupon Code..." required>
+                                        <button type="submit" class="th-btn style2 style-radius">Apply Coupon</button>
+                                    </form>
+                                </div> --}}
+                                <button type="submit" class="th-btn style2 style-radius">Update cart</button>
+                                <a href="{{ route('frontend.shop') }}" class="th-btn style3 style-radius">Continue
+                                    Shopping</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </form>
-            <div class="row justify-content-end">
+            <form action="{{ route('frontend.applyCoupon') }}" method="POST" class="th-cart-coupon d-flex gap-2">
+                @csrf
+                <input type="text" name="coupon_code" class="form-control" placeholder="Coupon Code..." required>
+                <button type="submit" class="th-btn style2 style-radius">Apply Coupon</button>
+            </form>
+
+
+            <div class="row justify-content-end mt-4">
                 <div class="col-md-8 col-lg-7 col-xl-6">
                     <h2 class="h4 summary-title">Cart Totals</h2>
-                    <table class="cart_totals">
+                    <table class="cart_totals table table-bordered">
                         <tbody>
                             <tr>
+                            <tr>
                                 <td>Cart Subtotal</td>
-                                <td data-title="Cart Subtotal"><span class="amount"><bdi><span>$</span>47</bdi></span>
+                                <td data-title="Cart Subtotal">
+                                    <span class="amount">
+                                        <bdi>
+                                            ${{ number_format($subtotal, 2) }}
+                                        </bdi>
+                                    </span>
                                 </td>
+                            </tr>
+
+                            @if (session('coupon'))
+                                <tr>
+                                    <td>Coupon ({{ session('coupon.code') }})</td>
+                                    <td>
+                                        <span class="amount text-success">
+                                            - ${{ number_format(session('coupon.discount'), 2) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endif
+
+                            <tr class="order-total">
+                                <td>Order Total</td>
+                                <td>
+                                    <strong>
+                                        <span class="amount">
+                                            ${{ number_format($subtotal - (session('coupon.discount') ?? 0), 2) }}
+                                        </span>
+                                    </strong>
+                                </td>
+                            </tr>
+
                             </tr>
                             <tr class="shipping">
                                 <th>Shipping and Handling</th>
                                 <td data-title="Shipping and Handling">
-                                    <ul class="woocommerce-shipping-methods list-unstyled">
-                                        <li><input type="radio" id="free_shipping" name="shipping_method"
-                                                class="shipping_method"> <label for="free_shipping">Free
-                                                shipping</label></li>
-                                        <li><input type="radio" id="flat_rate" name="shipping_method"
-                                                class="shipping_method" checked="checked"> <label for="flat_rate">Flat
-                                                rate</label></li>
+                                    <ul class="woocommerce-shipping-methods list-unstyled d-flex gap-4">
+                                        <li>
+                                            <input type="radio" id="free_shipping" name="shipping_method"
+                                                class="shipping_method">
+                                            <label for="free_shipping">Free shipping</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" id="flat_rate" name="shipping_method"
+                                                class="shipping_method" checked>
+                                            <label for="flat_rate">Flat rate</label>
+                                        </li>
                                     </ul>
-                                    <p class="woocommerce-shipping-destination">Shipping options will be updated during
-                                        checkout.</p>
-                                    <form action="#" method="post"><a href="#" class="shipping-calculator-button">Change
-                                            address</a>
-                                        <div class="shipping-calculator-form">
-                                            <p class="form-row"><select class="form-select">
-                                                    <option value="AR">Argentina</option>
-                                                    <option value="AM">Armenia</option>
-                                                    <option value="BD" selected="selected">Bangladesh</option>
-                                                </select></p>
-                                            <p><select class="form-select">
-                                                    <option value="">Select an option…</option>
-                                                    <option value="BD-05">Bagerhat</option>
-                                                    <option value="BD-01">Bandarban</option>
-                                                    <option value="BD-02">Barguna</option>
-                                                    <option value="BD-06">Barishal</option>
-                                                </select></p>
-                                            <p class="form-row"><input type="text" class="form-control"
-                                                    placeholder="Town / City"></p>
-                                            <p class="form-row"><input type="text" class="form-control"
-                                                    placeholder="Postcode / ZIP"></p>
-                                            <p><button class="th-btn style2 style-radius">Update</button></p>
-                                        </div>
-                                    </form>
+                                    <p class="woocommerce-shipping-destination mt-2">
+                                        Shipping options will be updated during checkout.
+                                    </p>
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot>
-                            <tr class="order-total">
-                                <td>Order Total</td>
-                                <td data-title="Total"><strong><span
-                                            class="amount"><bdi><span>$</span>47</bdi></span></strong></td>
-                            </tr>
-                        </tfoot>
                     </table>
-                    <div class="wc-proceed-to-checkout mb-30"><a href="{{ route('frontend.checkout') }}"
-                            class="th-btn style2 style-radius">Proceed to checkout</a></div>
+                    <div class="wc-proceed-to-checkout mb-30">
+                        <a href="{{ route('frontend.checkout') }}" class="th-btn style2 style-radius">Proceed to
+                            checkout</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
+
+@push('script')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on('click', '.update-cart', function() {
+            let action = $(this).data('action');
+            let row = $(this).closest('tr');
+            let id = row.data('id');
+
+            $.ajax({
+                url: "/update-cart/" + id,
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    action: action
+                },
+                success: function(response) {
+                    if (response.success) {
+                        row.find('.qty-input').val(response.quantity);
+                        row.find('.item-total').text("$" + response.item_total);
+                        $(".cart-subtotal").text(response.subtotal);
+                    }
+                }
+            });
+        });
+    </script>
+@endpush
