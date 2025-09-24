@@ -45,10 +45,12 @@
                     </thead>
                     <tbody>
                         @forelse($cart as $id => $item)
-                            <tr class="cart_item" data-id="{{ $id }}">
+                            <tr data-id="{{ $id }}">
                                 <td><img src="{{ asset('storage/' . $item['image']) }}" width="91" height="91"></td>
                                 <td>{{ $item['name'] }}</td>
-                                <td>${{ number_format($item['price'], 2) }}</td>
+                                <td class="item-price" data-price="{{ $item['price'] }}">
+                                    ${{ number_format($item['price'], 2) }}
+                                </td>
                                 <td>
                                     <div class="quantity d-flex align-items-center">
                                         <button type="button" class="btn btn-light update-cart"
@@ -67,12 +69,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Your cart is empty.</td>
+                                <td colspan="6">Your cart is empty.</td>
                             </tr>
                         @endforelse
-                        <tr>
-                            <td colspan="6" class="actions">
-                                {{-- <div class="th-cart-coupon mb-3">
+
+                        <td colspan="6" class="actions">
+                            {{-- <div class="th-cart-coupon mb-3">
                                     <form action="{{ route('frontend.applyCoupon') }}" method="POST" class="d-flex gap-2">
                                         @csrf
                                         <input type="text" name="coupon_code" class="form-control"
@@ -80,10 +82,10 @@
                                         <button type="submit" class="th-btn style2 style-radius">Apply Coupon</button>
                                     </form>
                                 </div> --}}
-                                <button type="submit" class="th-btn style2 style-radius">Update cart</button>
-                                <a href="{{ route('frontend.shop') }}" class="th-btn style3 style-radius">Continue
-                                    Shopping</a>
-                            </td>
+                            <button type="submit" class="th-btn style2 style-radius">Update cart</button>
+                            <a href="{{ route('frontend.shop') }}" class="th-btn style3 style-radius">Continue
+                                Shopping</a>
+                        </td>
                         </tr>
                     </tbody>
                 </table>
@@ -103,15 +105,12 @@
                             <tr>
                             <tr>
                                 <td>Cart Subtotal</td>
-                                <td data-title="Cart Subtotal">
-                                    <span class="amount">
-                                        <bdi>
-                                            ${{ number_format($subtotal, 2) }}
-                                        </bdi>
+                                <td>
+                                    <span class="amount cart-subtotal">
+                                        <bdi>${{ number_format($subtotal, 2) }}</bdi>
                                     </span>
                                 </td>
                             </tr>
-
                             @if (session('coupon'))
                                 <tr>
                                     <td>Coupon ({{ session('coupon.code') }})</td>
@@ -128,7 +127,9 @@
                                 <td>
                                     <strong>
                                         <span class="amount">
-                                            ${{ number_format($subtotal - (session('coupon.discount') ?? 0), 2) }}
+                                            <bdi class="order-total-amount">
+                                                ${{ number_format($subtotal - (session('coupon.discount') ?? 0), 2) }}
+                                            </bdi>
                                         </span>
                                     </strong>
                                 </td>
@@ -169,7 +170,7 @@
 
 @push('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    {{-- <script>
         $(document).on('click', '.update-cart', function() {
             let action = $(this).data('action');
             let row = $(this).closest('tr');
@@ -186,10 +187,72 @@
                     if (response.success) {
                         row.find('.qty-input').val(response.quantity);
                         row.find('.item-total').text("$" + response.item_total);
-                        $(".cart-subtotal").text(response.subtotal);
+
+                        $(".cart-subtotal bdi").text("$" + response.subtotal);
+                        $(".order-total bdi").text("$" + response.order_total);
+
+                        if ($(".coupon-discount").length) {
+                            $(".coupon-discount").text("- $" + response.coupon_discount);
+                        }
+
+                        $(".shipping-amount").text("$" + response.shipping_cost);
+
                     }
                 }
             });
+        });
+    </script> --}}
+
+
+
+    <script>
+        let updateTimeout;
+
+        $(document).on('click', '.update-cart', function() {
+            let row = $(this).closest('tr');
+            let id = row.data('id');
+            let qtyInput = row.find('.qty-input');
+
+            // Local quantity update
+            let currentQty = parseInt(qtyInput.val());
+            let action = $(this).data('action');
+
+            if (action === "increase") {
+                currentQty++;
+            } else if (action === "decrease" && currentQty > 1) {
+                currentQty--;
+            }
+
+            qtyInput.val(currentQty); // UI me turant dikh jaye
+
+            // Delay: 0.6 sec
+            clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(() => {
+                $.ajax({
+                    url: "/update-cart/" + id,
+                    method: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr("content"),
+                        quantity: currentQty // 👈 action ke bajaye final quantity
+                    },
+                    success: function(res) {
+                        if (res.success) {
+                            // Quantity aur product total update
+                            row.find('.item-total').text("$" + res.item_total);
+                            $(".cart-subtotal bdi").text("$" + res.subtotal);
+                            $(".order-total bdi").text("$" + res.order_total);
+
+                            // Coupon discount update agar exist karta ho
+                            if ($(".coupon-discount").length) {
+                                $(".coupon-discount").text("- $" + res.coupon_discount);
+                            }
+
+                            // Shipping cost update
+                            $(".shipping-amount").text("$" + res.shipping_cost);
+                        }
+                    }
+                });
+            }, 600); // 0.6 sec delay
         });
     </script>
 @endpush

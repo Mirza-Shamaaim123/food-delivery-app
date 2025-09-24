@@ -43,6 +43,7 @@ class FrontendController extends Controller
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
+        //   dd(session()->get('cart'));
         return view('frontend.cart', compact('cart', 'subtotal'));
     }
 
@@ -64,41 +65,59 @@ class FrontendController extends Controller
 
         session()->put('cart', $cart);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product added to cart',
-            'cart' => $cart
-        ]);
+
+        return redirect()->route('frontend.cart')->with('success', 'Product added to cart!');
     }
 
     // app/Http/Controllers/FrontendController.php
     public function updateCart(Request $request, $id)
-    {
-        $cart = session()->get('cart', []);
+{
+    $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
+    if (isset($cart[$id])) {
+        // Agar request me quantity directly aayi hai to usko set karo
+        if ($request->has('quantity')) {
+            $cart[$id]['quantity'] = max(1, (int) $request->quantity);
+        } else {
+            // Agar old action wala system use ho raha ho
             if ($request->action == "increase") {
                 $cart[$id]['quantity']++;
             } elseif ($request->action == "decrease" && $cart[$id]['quantity'] > 1) {
                 $cart[$id]['quantity']--;
             }
         }
-
-        session()->put('cart', $cart);
-
-        // subtotal calculate
-        $subtotal = 0;
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-        }
-
-        return response()->json([
-            'success' => true,
-            'quantity' => $cart[$id]['quantity'],
-            'item_total' => number_format($cart[$id]['price'] * $cart[$id]['quantity'], 2),
-            'subtotal' => number_format($subtotal, 2),
-        ]);
     }
+
+    session()->put('cart', $cart);
+
+    // Subtotal calculate
+    $subtotal = 0;
+    foreach ($cart as $item) {
+        $subtotal += $item['price'] * $item['quantity'];
+    }
+
+    // Coupon discount (agar apply hua hai)
+    $couponDiscount = session('coupon.discount') ?? 0;
+
+    // Shipping method check karo
+    $shippingMethod = session('shipping_method') ?? 'flat_rate';
+    $shippingCost = $shippingMethod === 'flat_rate' ? 10 : 0;
+
+    // Order total
+    $orderTotal = $subtotal - $couponDiscount + $shippingCost;
+
+    return response()->json([
+        'success'         => true,
+        'quantity'        => $cart[$id]['quantity'],
+        'item_total'      => number_format($cart[$id]['price'] * $cart[$id]['quantity'], 2),
+        'subtotal'        => number_format($subtotal, 2),
+        'coupon_discount' => number_format($couponDiscount, 2),
+        'shipping_cost'   => number_format($shippingCost, 2),
+        'order_total'     => number_format($orderTotal, 2),
+    ]);
+}
+
+
 
 
 

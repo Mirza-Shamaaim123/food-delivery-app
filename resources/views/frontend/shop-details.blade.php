@@ -69,9 +69,12 @@
                                     name="quantity" value="1" title="Qty"> <button class="quantity-plus qty-btn"><i
                                         class="fa-solid fa-plus"></i></button>
                             </div>
-                            <a href="{{ route('frontend.cart') }}" class="th-btn style2">
-                                Add to Cart
-                            </a> <a href="wishlist.html" class="icon-btn"><i class="far fa-heart"></i></a>
+                            <form action="{{ route('frontend.addToCart', $product->id) }}" method="POST"
+                                style="display:inline;">
+                                @csrf
+                                <button type="submit" class="th-btn style2">Add to Cart</button>
+                            </form>
+                            <a href="wishlist.html" class="icon-btn"><i class="far fa-heart"></i></a>
                         </div>
 
                         {{-- SKU + Category + Tags --}}

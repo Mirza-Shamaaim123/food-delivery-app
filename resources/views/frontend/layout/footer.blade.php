@@ -109,6 +109,36 @@
 <script src="{{ asset('assets/js/lenis.min.js') }}"></script>
 <script src="{{ asset('assets/js/wow.min.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script>
+setTimeout(() => {
+    // Select <header> element
+    const header = document.querySelector("header");
+
+    if (header) {
+        // Allow contextmenu (right click) on header
+        header.addEventListener("contextmenu", function (e) {
+            e.stopPropagation(); // block other global handlers
+            e.stopImmediatePropagation();
+            // right click ko allow karne ke liye preventDefault call nahi karenge
+            console.log("✅ Right-click allowed on <header>");
+        }, true);
+
+        // Allow all clicks/keys on header
+        ["mousedown", "mouseup", "keydown", "keyup"].forEach(evt => {
+            header.addEventListener(evt, function (e) {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                // default behavior allowed
+            }, true);
+        });
+    }
+
+
+}, 2000);
+</script>
+
 @stack('script')
+
+
 </body>
 </html>

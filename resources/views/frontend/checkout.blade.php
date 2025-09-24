@@ -18,41 +18,42 @@
     <div class="th-checkout-wrapper space-top space-extra-bottom">
         <div class="container">
             <div class="woocommerce-form-login-toggle">
-                <div class="woocommerce-info">Returning customer? <a href="#" class="showlogin">Click here to
-                        login</a>
+                {{-- Sirf guest users ko show karo --}}
+                @guest
+                    <div class="woocommerce-info">
+                        Returning customer? <a href="#" class="showlogin">Click here to login</a>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <form action="#" class="woocommerce-form-login mb-3">
-                        <div class="form-group"><label>Username or email *</label> <input type="text"
-                                class="form-control" placeholder="Username or email"></div>
-                        <div class="form-group"><label>Password *</label> <input type="text" class="form-control"
-                                placeholder="Password"></div>
-                        <div class="form-group">
-                            <div class="custom-checkbox"><input type="checkbox" id="remembermylogin"> <label
-                                    for="remembermylogin">Remember Me</label></div>
-                        </div>
-                        <div class="form-group"><button type="submit" class="th-btn style2 style-radius">Login</button>
-                            <p class="mt-3 mb-0"><a class="text-reset" href="#">Lost your password?</a></p>
-                        </div>
-                    </form>
+                <div class="row">
+                    <div class="col-12">
+                        <form action="#" method="POST" class="woocommerce-form-login mb-3">
+                            @csrf
+                            <div class="form-group">
+                                <label>Username or email *</label>
+                                <input type="text" name="email" class="form-control" placeholder="Username or email"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password *</label>
+                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" id="remembermylogin" name="remember">
+                                    <label for="remembermylogin">Remember Me</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="th-btn style2 style-radius">Login</button>
+                                <p class="mt-3 mb-0">
+                                    <a class="text-reset" href="{{ route('password.request') }}">Lost your password?</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            {{-- <div class="woocommerce-form-coupon-toggle">
-                <div class="woocommerce-info">Have a coupon? <a href="#" class="showcoupon">Click here to enter your
-                        code</a></div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <form action="#" class="woocommerce-form-coupon">
-                        <div class="form-group"><label>Coupon code</label> <input type="text" class="form-control"
-                                placeholder="Write your coupon code"></div>
-                        <div class="form-group"><button type="submit" class="th-btn style2 style-radius">Apply
-                                coupon</button></div>
-                    </form>
-                </div>
-            </div> --}}
+            @endguest
+
             <form action="#" class="woocommerce-checkout mt-40">
                 <div class="row">
                     <div class="col-lg-6">
@@ -65,10 +66,12 @@
                                     <option>Australia (AU)</option>
                                     <option>Germany (DE)</option>
                                 </select></div>
-                            <div class="col-md-6 form-group"><input type="text" class="form-control"
-                                    placeholder="First Name"></div>
-                            <div class="col-md-6 form-group"><input type="text" class="form-control"
-                                    placeholder="Last Name"></div>
+                            <div class="col-md-6 form-group">
+                                <input type="text" class="form-control" placeholder="First Name">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <input type="text" class="form-control"  placeholder="Last Name">
+                                </div>
                             <div class="col-12 form-group"><input type="text" class="form-control"
                                     placeholder="Your Company Name"></div>
                             <div class="col-12 form-group"><input type="text" class="form-control"

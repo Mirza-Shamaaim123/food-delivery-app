@@ -20,7 +20,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/shop', [FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shop/details/{id}', [FrontendController::class, 'details'])->name('frontend.shop.details');
 Route::get('/cart', [FrontendController::class, 'cart'])->name('frontend.cart');
-Route::get('/add-to-cart/{id}', [FrontendController::class, 'addToCart'])->name('frontend.addToCart');
+Route::post('/add-to-cart/{id}', [FrontendController::class, 'addToCart'])->name('frontend.addToCart');
 Route::post('/update-cart/{id}', [FrontendController::class, 'updateCart'])->name('frontend.updateCart');
 Route::get('/remove-from-cart/{id}', [FrontendController::class, 'removeFromCart'])->name('frontend.removeFromCart');
 Route::post('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('frontend.applyCoupon');
