@@ -24,6 +24,8 @@ Route::post('/add-to-cart/{id}', [FrontendController::class, 'addToCart'])->name
 Route::post('/update-cart/{id}', [FrontendController::class, 'updateCart'])->name('frontend.updateCart');
 Route::get('/remove-from-cart/{id}', [FrontendController::class, 'removeFromCart'])->name('frontend.removeFromCart');
 Route::post('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('frontend.applyCoupon');
+Route::post('/billing-details', [FrontendController::class, 'store'])->name('checkout.store');
+
 
 
 Route::get('/checkout', [FrontendController::class, 'checkout'])->name('frontend.checkout');

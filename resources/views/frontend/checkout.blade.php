@@ -46,7 +46,7 @@
                             <div class="form-group">
                                 <button type="submit" class="th-btn style2 style-radius">Login</button>
                                 <p class="mt-3 mb-0">
-                                    <a class="text-reset" href="{{ route('password.request') }}">Lost your password?</a>
+                                    <a class="text-reset" href="#">Lost your password?</a>
                                 </p>
                             </div>
                         </form>
@@ -54,43 +54,80 @@
                 </div>
             @endguest
 
-            <form action="#" class="woocommerce-checkout mt-40">
+            <form action="{{ route('checkout.store') }}" method="POST" class="woocommerce-checkout mt-40">
+                @csrf
                 <div class="row">
                     <div class="col-lg-6">
                         <h2 class="h4 fw-semibold">Billing Details</h2>
                         <div class="row">
-                            <div class="col-12 form-group"><select class="form-select">
-                                    <option>United Kingdom (UK)</option>
-                                    <option>United State (US)</option>
-                                    <option>Equatorial Guinea (GQ)</option>
-                                    <option>Australia (AU)</option>
-                                    <option>Germany (DE)</option>
+                            <div class="col-12 form-group"><select name="country" class="form-select">
+                                    <option value="UK">United Kingdom (UK)</option>
+                                    <option value="US">United States (US)</option>
+                                    <option value="GQ">Equatorial Guinea (GQ)</option>
+                                    <option value="AU">Australia (AU)</option>
+                                    <option value="DE">Germany (DE)</option>
+                                    <option value="CA">Canada (CA)</option>
+                                    <option value="FR">France (FR)</option>
+                                    <option value="IN">India (IN)</option>
+                                    <option value="PK">Pakistan (PK)</option>
+                                    <option value="BD">Bangladesh (BD)</option>
+                                    <option value="CN">China (CN)</option>
+                                    <option value="JP">Japan (JP)</option>
+                                    <option value="SA">Saudi Arabia (SA)</option>
+                                    <option value="AE">United Arab Emirates (AE)</option>
+                                    <option value="ZA">South Africa (ZA)</option>
+                                    <option value="NG">Nigeria (NG)</option>
+                                    <option value="BR">Brazil (BR)</option>
+                                    <option value="RU">Russia (RU)</option>
+                                    <option value="IT">Italy (IT)</option>
+                                    <option value="ES">Spain (ES)</option>
                                 </select></div>
                             <div class="col-md-6 form-group">
-                                <input type="text" class="form-control" placeholder="First Name">
+                                <input type="text" name="first_name" class="form-control" placeholder="First Name">
                             </div>
                             <div class="col-md-6 form-group">
-                                <input type="text" class="form-control"  placeholder="Last Name">
-                                </div>
-                            <div class="col-12 form-group"><input type="text" class="form-control"
-                                    placeholder="Your Company Name"></div>
-                            <div class="col-12 form-group"><input type="text" class="form-control"
-                                    placeholder="Street Address"> <input type="text" class="form-control"
-                                    placeholder="Apartment, suite, unit etc. (optional)"></div>
-                            <div class="col-12 form-group"><input type="text" class="form-control"
-                                    placeholder="Town / City"></div>
-                            <div class="col-md-6 form-group"><input type="text" class="form-control"
-                                    placeholder="Country"></div>
-                            <div class="col-md-6 form-group"><input type="text" class="form-control"
-                                    placeholder="Postcode / Zip"></div>
-                            <div class="col-12 form-group"><input type="text" class="form-control"
-                                    placeholder="Email Address"> <input type="text" class="form-control"
-                                    placeholder="Phone number"></div>
-                            <div class="col-12 form-group"><input type="checkbox" id="accountNewCreate"> <label
-                                    for="accountNewCreate">Create An Account?</label></div>
+                                <input type="text" name="last_name" class="form-control" placeholder="Last Name">
+                            </div>
+                            <div class="col-12 form-group">
+                                <input type="text" name="company_name" class="form-control"
+                                    placeholder="Your Company Name">
+                            </div>
+                            <div class="col-12 form-group">
+                                <input type="text" name="street_address" class="form-control"
+                                    placeholder="Street Address">
+                                <input type="text" name="apartment_suite_unit	" class="form-control"
+                                    placeholder="Apartment, suite, unit etc. (optional)">
+                            </div>
+                            <div class="col-12 form-group">
+                                <input type="text" name="city" class="form-control" placeholder="Town / City">
+                            </div>
+
+                            <div class="col-12 form-group">
+                                <input type="text" name="postcode_zip" class="form-control"
+                                    placeholder="Postcode / Zip">
+                            </div>
+                            <div class="col-12 form-group">
+                                <input type="text" name="email_address" class="form-control"
+                                    placeholder="Email Address">
+                                <input type="text" name="phone_number" class="form-control"
+                                    placeholder="Phone number">
+                            </div>
+                            <div class="col-12 form-group">
+                                <input type="checkbox" id="accountNewCreate">
+                                <label for="accountNewCreate">Create An Account?</label>
+                            </div>
                         </div>
+                        {{-- <div class="row mt-4">
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    Place Order
+                                </button>
+                            </div>
+                        </div> --}}
+
                     </div>
-                    <div class="col-lg-6">
+                    
+                     <div class="col-lg-6">
                         <p id="ship-to-different-address"><input id="ship-to-different-address-checkbox" type="checkbox"
                                 name="ship_to_different_address" value="1" checked="checked"> <label
                                 for="ship-to-different-address-checkbox">Ship to a different address? <span
@@ -128,10 +165,10 @@
                             <textarea cols="20" rows="5" class="form-control"
                                 placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </form>
-            <h4 class="mt-4 pt-lg-2 fw-semibold">Your Order</h4>
+             <h4 class="mt-4 pt-lg-2 fw-semibold">Your Order</h4>
             <form action="#" class="woocommerce-cart-form">
                 <table class="cart_table mb-20">
                     <thead>
@@ -212,8 +249,9 @@
                                 </p>
                             </div>
                         </li>
-                    </ul>
-                    <div class="form-row place-order"><button type="submit" class="th-btn style-radius style2">Place
+                    </ul> 
+                    <div class="form-row place-order">
+                        <button type="submit" class="th-btn style-radius style2">Place
                             order</button></div>
                 </div>
             </div>

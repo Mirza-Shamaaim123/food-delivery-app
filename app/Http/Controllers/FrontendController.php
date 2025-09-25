@@ -6,7 +6,10 @@ use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\Tag;
+use App\Models\User;
+use  Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Models\BillingDetail; 
 
 class FrontendController extends Controller
 {
@@ -175,19 +178,65 @@ class FrontendController extends Controller
         return back()->with('success', 'Coupon applied successfully!');
     }
 
-
-
-
-
-
-
-
-
-
-
-
     public function checkout()
     {
-        return view('frontend.checkout');
+         $subtotal = 0;
+         $cart = session('cart', []);
+
+    foreach ($cart as $item) {
+        $subtotal += $item['price'] * $item['quantity'];
     }
+        return view('frontend.checkout', compact('subtotal'));
+    }
+    // public function header()
+    // {
+    //      $subtotal = 0;
+    //      $cart = session('cart', []);
+
+    // foreach ($cart as $item) {
+    //     $subtotal += $item['price'] * $item['quantity'];
+    // }
+    //     return view('frontend.layout.header', compact('subtotal'));
+    // }
+
+
+
+
+
+
+
+   
+
+
+
+public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'country' => 'required|string|size:2',
+        'first_name' => 'required|string|max:100',
+        'last_name' => 'required|string|max:100',
+        'company_name' => 'nullable|string|max:255',
+        'street_address' => 'required|string|max:255',
+        'apartment_suite_unit' => 'nullable|string|max:255',
+        'city' => 'required|string|max:100',
+        'postcode_zip' => 'required|string|max:20',
+        'email_address' => 'required|email|max:255',
+        'phone_number' => 'required|string|max:20',
+    ]);
+
+    if ($validator->fails()) {
+        return back()
+            ->withErrors($validator)
+            ->withInput();
+    }
+
+    // Store validated data in billing_details table
+    BillingDetail::create($validator->validated());
+
+    return back()->with('success', 'Billing details submitted successfully.');
 }
+
+}
+
+
+

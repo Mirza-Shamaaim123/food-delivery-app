@@ -21,7 +21,8 @@
     <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('assets/img/favicons/apple-icon-144x144.png') }}">
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/img/favicons/apple-icon-152x152.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/favicons/apple-icon-180x180.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192"href="{{ asset('assets/img/favicons/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png"
+        sizes="192x192"href="{{ asset('assets/img/favicons/android-icon-192x192.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/favicons/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('assets/img/favicons/favicon-96x96.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/favicons/favicon-16x16.png') }}">
@@ -31,7 +32,8 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&amp;family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&amp;family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -49,48 +51,55 @@
                 </span><span data-text-preloader="B" class="letters-loading">B</span></div>
         </div>
     </div>
+    @php
+        $subtotal = 0;
+        $cart = session('cart', []);
+
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+    @endphp
     <div class="sidemenu-wrapper sidemenu-cart">
         <div class="sidemenu-content"><button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
             <div class="widget woocommerce widget_shopping_cart">
                 <h3 class="widget_title">Shopping cart</h3>
                 <div class="widget_shopping_cart_content">
                     <ul class="woocommerce-mini-cart cart_list product_list_widget">
-                        <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#"
-                                class="remove remove_from_cart_button"><i class="far fa-times"></i></a> <a
-                                href="#"><img src="assets/img/product/product_1_1.png"
-                                    alt="Cart Image">Dumbbells</a> <span class="quantity">1 × <span
-                                    class="woocommerce-Price-amount amount"><span
-                                        class="woocommerce-Price-currencySymbol">$</span>940.00</span></span></li>
-                        <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#"
-                                class="remove remove_from_cart_button"><i class="far fa-times"></i></a> <a
-                                href="#"><img src="assets/img/product/product_1_2.png" alt="Cart Image">Leather
-                                Bag</a> <span class="quantity">1 × <span class="woocommerce-Price-amount amount"><span
-                                        class="woocommerce-Price-currencySymbol">$</span>899.00</span></span></li>
-                        <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#"
-                                class="remove remove_from_cart_button"><i class="far fa-times"></i></a> <a
-                                href="#"><img src="assets/img/product/product_1_3.png" alt="Cart Image">Protein
-                                Bottle</a> <span class="quantity">1 × <span
-                                    class="woocommerce-Price-amount amount"><span
-                                        class="woocommerce-Price-currencySymbol">$</span>756.00</span></span></li>
-                        <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#"
-                                class="remove remove_from_cart_button"><i class="far fa-times"></i></a> <a
-                                href="#"><img src="assets/img/product/product_1_4.png" alt="Cart Image">Gym
-                                Cycle</a> <span class="quantity">1 × <span
-                                    class="woocommerce-Price-amount amount"><span
-                                        class="woocommerce-Price-currencySymbol">$</span>723.00</span></span></li>
-                        <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#"
-                                class="remove remove_from_cart_button"><i class="far fa-times"></i></a> <a
-                                href="#"><img src="assets/img/product/product_1_5.png" alt="Cart Image">Sports
-                                Shoes</a> <span class="quantity">1 × <span
-                                    class="woocommerce-Price-amount amount"><span
-                                        class="woocommerce-Price-currencySymbol">$</span>1080.00</span></span></li>
+                        @forelse (session('cart', []) as $productId => $item)
+                            <li class="woocommerce-mini-cart-item mini_cart_item">
+                                <a href="#" class="remove remove_from_cart_button">
+                                    <i class="far fa-times"></i>
+                                </a>
+                                <a href="#">
+                                    <td><img src="{{ asset('storage/' . $item['image']) }}" width="91"
+                                            height="91"></td>
+                                    {{ $item['name'] }}
+                                </a>
+                                <span class="quantity">
+                                    {{ $item['quantity'] }} ×
+                                    <span class="woocommerce-Price-amount amount">
+                                        <span
+                                            class="woocommerce-Price-currencySymbol">$</span>{{ number_format($item['price'], 2) }}
+                                    </span>
+                                </span>
+                            </li>
+                        @empty
+                            <li>Your cart is empty.</li>
+                        @endforelse
                     </ul>
-                    <p class="woocommerce-mini-cart__total total"><strong>Subtotal:</strong> <span
-                            class="woocommerce-Price-amount amount"><span
-                                class="woocommerce-Price-currencySymbol">$</span>4398.00</span></p>
-                    <p class="woocommerce-mini-cart__buttons buttons"><a href="cart.html"
-                            class="th-btn style2 wc-forward">View cart</a> <a href="checkout.html"
-                            class="th-btn style2 checkout wc-forward">Checkout</a></p>
+
+                    <p class="woocommerce-mini-cart__total total">
+                        <strong>Subtotal:</strong>
+                        <span class="amount cart-subtotal">
+                            <bdi>${{ number_format($subtotal, 2) }}</bdi>
+                        </span>
+                    </p>
+
+                    <p class="woocommerce-mini-cart__buttons buttons">
+                        <a href="{{ route('frontend.cart') }}" class="th-btn style2 wc-forward">View cart</a>
+                        <a href="{{ route('frontend.checkout') }}"
+                            class="th-btn style2 checkout wc-forward">Checkout</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -124,7 +133,7 @@
                                     <li><a href="shop.html">Shop</a></li>
                                     <li><a href="shop-details.html">Shop Details</a></li>
                                     <li><a href="cart.html">Cart Page</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
+                                    <li><a href="#">Checkout</a></li>
                                     <li><a href="wishlist.html">Wishlist</a></li>
                                 </ul>
                             </li>
@@ -183,7 +192,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="sticky-wrapper">
             <div class="menu-area">
                 <div class="container">
@@ -195,7 +204,7 @@
                         <div class="col-auto">
                             <nav class="main-menu d-none d-lg-inline-block">
                                 <ul>
-                                    <li ><a href="{{ route('home')}}">HOME</a>
+                                    <li><a href="{{ route('home') }}">HOME</a>
 
                                     </li>
                                     <li><a href="{{ route('home.about') }}">ABOUT</a></li>
@@ -212,7 +221,7 @@
                                                     <li><a href="{{ route('frontend.shop') }}">Shop</a></li>
                                                     <li><a href="shop-details.html">Shop Details</a></li>
                                                     <li><a href="cart.html">Cart Page</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
+                                                    <li><a href="{{ route('frontend.checkout') }}">Checkout</a></li>
                                                     <li><a href="wishlist.html">Wishlist</a></li>
                                                 </ul>
                                             </li>
@@ -253,9 +262,9 @@
                                     <span class="badge">5</span>
                                     <i class="fa-regular fa-cart-shopping"></i>
                                 </button>
-                                
-                                   <a href="{{ route('account.login') }}"> <i class="fa-regular fa-user"></i></a>
-                                
+
+                                <a href="{{ route('account.login') }}"> <i class="fa-regular fa-user"></i></a>
+
 
 
                                 <a href="reservation.html"class="th-btn btn-mask">RESERVE A TABLE</a>
