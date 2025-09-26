@@ -17,7 +17,7 @@
     </div>
     <div class="th-checkout-wrapper space-top space-extra-bottom">
         <div class="container">
-            <div class="woocommerce-form-login-toggle">
+            {{-- <div class="woocommerce-form-login-toggle"> --}}
                 {{-- Sirf guest users ko show karo --}}
                 @guest
                     <div class="woocommerce-info">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             @endguest
-             <h4 class="mt-4 pt-lg-2 fw-semibold">Your Order</h4>
+            <h4 class="mt-4 pt-lg-2 fw-semibold">Your Order</h4>
             <form action="#" class="woocommerce-cart-form">
                 <table class="cart_table mb-20">
                     <thead>
@@ -100,13 +100,16 @@
                 </table>
             </form>
 
-            <form action="{{ route('checkout.store') }}" method="POST" class="woocommerce-checkout mt-40">
+
+
+            <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form"
+                class="woocommerce-checkout mt-40">
                 @csrf
                 <div class="row">
                     <div class="col-lg-6">
                         <h2 class="h4 fw-semibold">Billing Details</h2>
                         <div class="row">
-                            <div class="col-12 form-group"><select name="country" class="form-select">
+                            <div class="col-12 form-group"><select name="country" id="billing_country" class="form-select">
                                     <option value="UK">United Kingdom (UK)</option>
                                     <option value="US">United States (US)</option>
                                     <option value="GQ">Equatorial Guinea (GQ)</option>
@@ -127,54 +130,77 @@
                                     <option value="RU">Russia (RU)</option>
                                     <option value="IT">Italy (IT)</option>
                                     <option value="ES">Spain (ES)</option>
-                                </select></div>
-                            <div class="col-md-6 form-group">
-                                <input type="text" name="first_name" class="form-control" placeholder="First Name">
+                                </select>
+                                {{-- <span class="text-danger error-message" data-error-for="country"></span> --}}
                             </div>
                             <div class="col-md-6 form-group">
-                                <input type="text" name="last_name" class="form-control" placeholder="Last Name">
+                                <span class="text-danger error-message" data-error-for="first_name"></span>
+                                <input type="text" name="first_name" id="billing_first_name" class="form-control"
+                                    placeholder="First Name">
+
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <span class="text-danger error-message" data-error-for="last_name"></span>
+                                <input type="text" name="last_name" id="billing_last_name" class="form-control"
+                                    placeholder="Last Name">
+
                             </div>
                             <div class="col-12 form-group">
-                                <input type="text" name="company_name" class="form-control"
+                                <span class="text-danger error-message" data-error-for="company_name"></span>
+                                <input type="text" name="company_name" id="billing_company" class="form-control"
                                     placeholder="Your Company Name">
+
                             </div>
                             <div class="col-12 form-group">
-                                <input type="text" name="street_address" class="form-control"
+                                <span class="text-danger error-message" data-error-for="street_address"></span>
+                                <input type="text" name="street_address" id="billing_address" class="form-control"
                                     placeholder="Street Address">
-                                <input type="text" name="apartment_suite_unit	" class="form-control"
-                                    placeholder="Apartment, suite, unit etc. (optional)">
+                                <span class="text-danger error-message" data-error-for="apartment_suite_unit"></span>
+                                <input type="text" name="apartment_suite_unit" id="billing_apartment_suite_unit"
+                                    class="form-control" placeholder="Apartment, suite, unit etc. (optional)">
+
                             </div>
                             <div class="col-12 form-group">
-                                <input type="text" name="city" class="form-control" placeholder="Town / City">
+                                <span class="text-danger error-message" data-error-for="city"></span>
+                                <input type="text" name="city" class="form-control" id="billing_city"
+                                    placeholder="Town / City">
+
                             </div>
 
                             <div class="col-12 form-group">
-                                <input type="text" name="postcode_zip" class="form-control"
+                                <span class="text-danger error-message" data-error-for="postcode_zip"></span>
+                                <input type="text" name="postcode_zip" class="form-control" id="billing_postcode"
                                     placeholder="Postcode / Zip">
+
                             </div>
                             <div class="col-12 form-group">
-                                <input type="text" name="email_address" class="form-control"
+                                <span class="text-danger error-message" data-error-for="email_address"></span>
+                                <input type="text" name="email_address" class="form-control" id="billing_email"
                                     placeholder="Email Address">
-                                <input type="text" name="phone_number" class="form-control"
+                                <span class="text-danger error-message" data-error-for="phone_number"></span>
+                                <input type="text" name="phone_number" class="form-control" id="billing_phone"
                                     placeholder="Phone number">
+
                             </div>
                             <div class="col-12 form-group">
                                 <input type="checkbox" id="accountNewCreate">
                                 <label for="accountNewCreate">Create An Account?</label>
                             </div>
                         </div>
-                      
+
 
                     </div>
-                    
-                     <div class="col-lg-6">
+
+                    <div class="col-lg-6">
                         <p id="ship-to-different-address"><input id="ship-to-different-address-checkbox" type="checkbox"
-                                name="ship_to_different_address" value="1" checked="checked"> <label
+                                name="ship_to_different_address" value="1"> <label
                                 for="ship-to-different-address-checkbox">Ship to a different address? <span
-                                    class="checkmark"></span></label></p>
-                        <div class="shipping_address">
+                                    class="checkmark"></span></label>
+                        </p>
+                        <div class="shipping_address" style="display: none;">
                             <div class="row">
-                                <div class="col-12 form-group"><select class="form-select">
+                                <div class="col-12 form-group"><select id="shipping_country" name="shipping_country"
+                                        class="form-select">
                                         <option>United Kingdom (UK)</option>
                                         <option>United State (US)</option>
                                         <option>Equatorial Guinea (GQ)</option>
@@ -182,30 +208,54 @@
                                         <option>Germany (DE)</option>
                                     </select></div>
                                 <div class="col-md-6 form-group">
-                                    <input type="text" class="form-control" name="first_name" placeholder="First Name">
+                                    <span class="text-danger error-message" data-error-for="shipping_first_name"></span>
+                                    <input type="text" class="form-control" id="shipping_first_name"
+                                        name="shipping_first_name" placeholder="First Name">
+
                                 </div>
                                 <div class="col-md-6 form-group">
-                                    <input type="text" class="form-control" name="last_name" placeholder="Last Name">
+                                    <span class="text-danger error-message" data-error-for="shipping_last_name"></span>
+                                    <input type="text" class="form-control" id="shipping_last_name"
+                                        name="shipping_last_name" placeholder="Last Name">
+
                                 </div>
                                 <div class="col-12 form-group">
-                                    <input type="text" class="form-control" name="company_name" placeholder="Your Company Name">
+                                    <span class="text-danger error-message" data-error-for="shipping_company_name"></span>
+                                    <input type="text" class="form-control" id="shipping_company_name"
+                                        name="shipping_company_name" placeholder="Your Company Name">
                                 </div>
                                 <div class="col-12 form-group">
-                                    <input type="text" class="form-control" name="street_address" placeholder="Street Address">
-                                     <input type="text" class="form-control" name="apartment_suite_unit" placeholder="Apartment, suite, unit etc. (optional)">
-                                    </div>
+                                    <span class="text-danger error-message"
+                                        data-error-for="shipping_street_address"></span>
+                                    <input type="text" class="form-control" id="shipping_street_address"
+                                        name="shipping_street_address" placeholder="Street Address">
+                                    <span class="text-danger error-message"
+                                        data-error-for="shipping_apartment_suite_unit"></span>
+                                    <input type="text" class="form-control" id="shipping_apartment_suite_unit"
+                                        name="shipping_apartment_suite_unit"
+                                        placeholder="Apartment, suite, unit etc. (optional)">
+                                </div>
                                 <div class="col-12 form-group">
-                                    <input type="text" class="form-control"  name="city" placeholder="Town / City">
+                                    <span class="text-danger error-message" data-error-for="shipping_city"></span>
+                                    <input type="text" class="form-control" id="shipping_city" name="shipping_city"
+                                        placeholder="Town / City">
                                 </div>
                                 {{-- <div class="col-md-6 form-group">
                                     <input type="text" class="form-control" name="country" placeholder="Country">
                                 </div> --}}
-                                <div class="col-md-6 form-group"  class="form-control">
-                                    <input type="text" class="form-control" name="postcode_zip" placeholder="Postcode / Zip">
+                                <div class="col-md-6 form-group" class="form-control">
+                                    <span class="text-danger error-message" data-error-for="shipping_postcode_zip"></span>
+                                    <input type="text" class="form-control" id="shipping_postcode_zip"
+                                        name="shipping_postcode_zip" placeholder="Postcode / Zip">
                                 </div>
                                 <div class="col-12 form-group">
-                                    <input type="text" class="form-control" name="email_address"  placeholder="Email Address">
-                                    <input type="text" class="form-control" name="phone_number" placeholder="Phone number">
+                                    <span class="text-danger error-message"
+                                        data-error-for="shipping_email_address"></span>
+                                    <input type="text" class="form-control" id="shipping_email_address"
+                                        name="shipping_email_address" placeholder="Email Address">
+                                    <span class="text-danger error-message" data-error-for="shipping_phone_number"></span>
+                                    <input type="text" class="form-control" id="shipping_phone_number"
+                                        name="shipping_phone_number" placeholder="Phone number">
                                 </div>
                             </div>
                         </div>
@@ -213,39 +263,98 @@
                             <textarea cols="20" rows="5" class="form-control"
                                 placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                         </div>
-                    </div> 
+                    </div>
                 </div>
 
-                 <div class="mt-lg-3 mb-30">
-                <div class="woocommerce-checkout-payment">
-                    <ul class="wc_payment_methods payment_methods methods">
-                        <li class="wc_payment_method payment_method_bacs"><input id="payment_method_bacs" type="radio"
-                                class="input-radio" name="payment_method" value="bacs" checked="checked"> <label
-                                for="payment_method_bacs">Stripe</label>
-                            {{-- <div class="payment_box payment_method_bacs">
-                                <p>Make your payment directly into our bank account. Please use your Order ID as the
-                                    payment reference. Your order will not be shipped until the funds have cleared in
-                                    our account.</p>
-                            </div> --}}
-                        </li>
-                       
-                        <li class="wc_payment_method payment_method_paypal"><input id="payment_method_paypal"
-                                type="radio" class="input-radio" name="payment_method" value="paypal"> <label
-                                for="payment_method_paypal">Paypal</label>
-                            <div class="payment_box payment_method_paypal">
-                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.
-                                </p>
-                            </div>
-                        </li>
-                    </ul> 
-                    <div class="form-row place-order">
-                        <button type="submit" class="th-btn style-radius style2">Place
-                            order</button></div>
+                <div class="mt-lg-3 mb-30">
+                    <div class="woocommerce-checkout-payment">
+                        <ul class="wc_payment_methods payment_methods methods">
+                            <li class="wc_payment_method payment_method_stripe">
+                                <input id="payment_method_stripe" type="radio" name="payment_method" value="stripe">
+                                <label for="payment_method_stripe">Stripe</label>
+                            </li>
+
+                            <!-- PayPal -->
+                            <li class="wc_payment_method payment_method_paypal">
+                                <input id="payment_method_paypal" type="radio" name="payment_method" value="paypal">
+                                <label for="payment_method_paypal">PayPal</label>
+                            </li>
+                        </ul>
+                        <div class="form-row place-order">
+                            <button type="submit" id="place-order-btn" class="th-btn style-radius style2">Place
+                                order</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
             </form>
-            
-           
+
+
+
+            <script src="https://js.stripe.com/v3/"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const form = document.getElementById("checkout-form");
+                    const billingFields = [
+                        "first_name", "last_name", "street_address", "city",
+                        "country", "postcode_zip", "email_address", "phone_number", "company_name",
+                        "apartment_suite_unit"
+                    ];
+                    const shippingCheckbox = document.getElementById("ship-to-different-address-checkbox");
+
+                    form.addEventListener("submit", function(e) {
+                        let valid = true;
+
+                        // ✅ Saare purane errors hatao
+                        document.querySelectorAll(".error-message").forEach(span => {
+                            span.textContent = "";
+                        });
+
+                        // ✅ Billing fields check
+                        billingFields.forEach(function(field) {
+                            const input = document.querySelector(`[name="${field}"]`);
+                            if (input && input.value.trim() === "") {
+                                valid = false;
+                                const errorSpan = document.querySelector(`[data-error-for="${field}"]`);
+                                if (errorSpan) errorSpan.textContent =
+                                    `${field.replace("_", " ")} is required`;
+                            }
+                        });
+
+                        // ✅ Shipping fields check only if checkbox is ticked
+                        if (shippingCheckbox.checked) {
+                            const shippingFields = [
+                                "shipping_first_name", "shipping_last_name",
+                                "shipping_street_address", "shipping_city",
+                                "shipping_country", "shipping_postcode_zip",
+                                "shipping_email_address", "shipping_phone_number"
+                            ];
+
+                            shippingFields.forEach(function(field) {
+                                const input = document.querySelector(`[name="${field}"]`);
+                                if (input && input.value.trim() === "") {
+                                    valid = false;
+                                    const errorSpan = document.querySelector(`[data-error-for="${field}"]`);
+                                    if (errorSpan) errorSpan.textContent =
+                                        `${field.replace("shipping_", "").replace("_", " ")} is required (Shipping)`;
+                                }
+                            });
+                        }
+
+                        // ❌ Agar invalid hai to form submit roko
+                        if (!valid) {
+                            e.preventDefault();
+                        }
+                    });
+                });
+            </script>
+
+
+
+            {{-- <form action="{{ route('checkout.session') }}" method="POST">
+                @csrf
+                <button type="submit" class="th-btn style-radius style2">Stripe</button>
+            </form>  --}}
+
         </div>
     </div>
 @endsection

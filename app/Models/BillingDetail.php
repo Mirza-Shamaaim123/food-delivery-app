@@ -18,5 +18,6 @@ class BillingDetail extends Model
         'postcode_zip',
         'email_address',
         'phone_number',
+        'payment_method',
     ];
 }

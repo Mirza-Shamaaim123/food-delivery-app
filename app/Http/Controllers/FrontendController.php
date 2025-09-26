@@ -11,6 +11,8 @@ use  Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\BillingDetail;
 use App\Models\ShippingDetail;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class FrontendController extends Controller
 {
@@ -179,16 +181,7 @@ class FrontendController extends Controller
         return back()->with('success', 'Coupon applied successfully!');
     }
 
-    public function checkout()
-    {
-        $subtotal = 0;
-        $cart = session('cart', []);
 
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-        }
-        return view('frontend.checkout', compact('subtotal'));
-    }
     // public function header()
     // {
     //      $subtotal = 0;
@@ -210,11 +203,13 @@ class FrontendController extends Controller
 
 
 
+
+
     public function store(Request $request)
     {
-        // ✅ Billing validation
+        // 🔹 Validate billing
         $validator = Validator::make($request->all(), [
-            'country' => 'required|string|size:2',
+            'country' => 'required|string|max:2',
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
             'company_name' => 'nullable|string|max:255',
@@ -228,38 +223,16 @@ class FrontendController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withErrors($validator)->withInput();
         }
 
-        // ✅ Save billing
+        // 🔹 Save billing
         $billing = BillingDetail::create($validator->validated());
 
-        // ✅ Agar user ne "Ship to a different address" tick kiya hai
+        // 🔹 Save shipping (agar ticked hai)
         if ($request->has('ship_to_different_address')) {
-            $shippingValidator = Validator::make($request->all(), [
-                'shipping_first_name' => 'required|string|max:100',
-                'shipping_last_name' => 'required|string|max:100',
-                'shipping_company_name' => 'nullable|string|max:255',
-                'shipping_street_address' => 'required|string|max:255',
-                'shipping_apartment_suite_unit' => 'nullable|string|max:255',
-                'shipping_city' => 'required|string|max:100',
-                'shipping_country' => 'required|string|max:100',
-                'shipping_postcode_zip' => 'required|string|max:20',
-                'shipping_email_address' => 'required|email|max:255',
-                'shipping_phone_number' => 'required|string|max:20',
-            ]);
-
-            if ($shippingValidator->fails()) {
-                return back()
-                    ->withErrors($shippingValidator)
-                    ->withInput();
-            }
-
-            // ✅ Save shipping
             ShippingDetail::create([
-                'order_id' => $billing->id, // optional, agar order relation banana ho
+                'order_id' => $billing->id,
                 'first_name' => $request->shipping_first_name,
                 'last_name' => $request->shipping_last_name,
                 'company_name' => $request->shipping_company_name,
@@ -273,6 +246,32 @@ class FrontendController extends Controller
             ]);
         }
 
+        // 🔹 Agar Stripe select hai
+        if ($request->payment_method === 'stripe') {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'product_data' => [
+                            'name' => 'Order #' . $billing->id,
+                        ],
+                        'unit_amount' => 5000, // yahan amount cents me aayega (ex: $50 = 5000)
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('stripe.cancel'),
+            ]);
+
+            // ✅ Redirect Stripe hosted checkout page par
+            return redirect($session->url);
+        }
+
+        // 🔹 Agar PayPal ya dusra method hai
         return back()->with('success', 'Billing & Shipping details submitted successfully.');
     }
 }
