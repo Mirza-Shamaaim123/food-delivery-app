@@ -13,6 +13,7 @@ use App\Models\BillingDetail;
 use App\Models\ShippingDetail;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\PaymentIntent;
 
 class FrontendController extends Controller
 {
@@ -123,12 +124,6 @@ class FrontendController extends Controller
         ]);
     }
 
-
-
-
-
-
-
     public function removeFromCart($id)
     {
         $cart = session()->get('cart', []);
@@ -180,29 +175,6 @@ class FrontendController extends Controller
 
         return back()->with('success', 'Coupon applied successfully!');
     }
-
-
-    // public function header()
-    // {
-    //      $subtotal = 0;
-    //      $cart = session('cart', []);
-
-    // foreach ($cart as $item) {
-    //     $subtotal += $item['price'] * $item['quantity'];
-    // }
-    //     return view('frontend.layout.header', compact('subtotal'));
-    // }
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function store(Request $request)
@@ -268,10 +240,29 @@ class FrontendController extends Controller
             ]);
 
             // ✅ Redirect Stripe hosted checkout page par
-            return redirect($session->url);
+            // return redirect($session->url);
         }
 
         // 🔹 Agar PayPal ya dusra method hai
         return back()->with('success', 'Billing & Shipping details submitted successfully.');
     }
+
+   public function createPaymentIntent(Request $request) 
+{
+    Stripe::setApiKey(config('services.stripe.secret')); // ✅ secret key (sk_test)
+
+    $amount = $request->amount; // frontend se aya hua cents me amount
+
+    $paymentIntent = PaymentIntent::create([
+        'amount' => $amount,
+        'currency' => 'usd',
+        'automatic_payment_methods' => ['enabled' => true],
+    ]);
+
+    return response()->json([
+        'clientSecret' => $paymentIntent->client_secret
+    ]);
 }
+
+}
+

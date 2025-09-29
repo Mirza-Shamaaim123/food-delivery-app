@@ -1,6 +1,4 @@
-@extends('frontend.layout.main')
-@section('content')
-      <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
+    <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -16,15 +14,15 @@
         </div>
     </div>
     <div class="th-checkout-wrapper space-top space-extra-bottom">
-        <div class="container checkout">
+        <div class="container">
             {{-- <div class="woocommerce-form-login-toggle"> --}}
             {{-- Sirf guest users ko show karo --}}
             @guest
-                <div class="woocommerce-info checkout">
+                <div class="woocommerce-info">
                     Returning customer? <a href="#" class="showlogin">Click here to login</a>
                 </div>
             </div>
-            <div class="row checkout">
+            <div class="row">
                 <div class="col-12">
                     <form action="#" method="POST" class="woocommerce-form-login mb-3">
                         @csrf
@@ -52,8 +50,8 @@
                 </div>
         @endguest
         </div>
-        <h4 class="mt-4 pt-lg-2 fw-semibold checkout">Your Order</h4>
-        <form action="#" class="woocommerce-cart-form checkout">
+        <h4 class="mt-4 pt-lg-2 fw-semibold">Your Order</h4>
+        <form action="#" class="woocommerce-cart-form">
             <table class="cart_table mb-20">
                 <thead>
                     <tr>
@@ -119,7 +117,7 @@
                 </tfoot>
             </table>
         </form>
-        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" class="woocommerce-checkout mt-40 checkout">
+        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" class="woocommerce-checkout mt-40">
             @csrf
             <div class="row">
                 <div class="col-lg-6">
@@ -442,4 +440,3 @@
 
     </div>
     </div>
-@endsection

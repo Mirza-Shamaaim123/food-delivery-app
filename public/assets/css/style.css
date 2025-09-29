@@ -19742,3 +19742,8 @@ span.select2-selection.select2-selection--single:focus {
     height: 100%;       /* container height ke barabar */
     object-fit: cover;   /* crop ho ke fit ho jaye */
 }
+
+.checkout{
+padding-left: 45px !important;
+padding-right: 45px !important;
+}

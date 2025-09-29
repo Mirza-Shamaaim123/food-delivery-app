@@ -30,8 +30,8 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             // 'slug' => 'required|string|unique:categories,slug',
-            'description' => 'nullable|string',
-            'available_items' => 'required|integer|min:0', // ✅ Add available_items validation
+            // 'description' => 'nullable|string',
+            // 'available_items' => 'required|integer|min:0', // ✅ Add available_items validation
             'status' => 'required|in:active,inactive', // ✅ Correct
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
@@ -40,8 +40,8 @@ class CategoryController extends Controller
             $category = new Category();
             $category->name = $request->name;
             // $category->slug = $request->slug;
-            $category->description = $request->description;
-            $category->available_items = $request->available_items; // ✅ Save available_items
+            // $category->description = $request->description;
+            // $category->available_items = $request->available_items; // ✅ Save available_items
             $category->status = $request->status; // 👈 yahan "active" / "inactive" save hoga
 
             if ($request->hasFile('image')) {
@@ -68,18 +68,18 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            // 'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
-            'available_items' => 'required|integer|min:0',
+            // 'available_items' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $category = Category::findOrFail($id);
 
         $category->name = $request->name;
-        $category->description = $request->description;
+        // $category->description = $request->description;
         $category->status = $request->status;
-        $category->available_items = $request->available_items;
+        // $category->available_items = $request->available_items;
         // ✅ Agar nayi image upload hui hai
         if ($request->hasFile('image')) {
 
@@ -112,9 +112,5 @@ class CategoryController extends Controller
         return redirect()->route('admin.categorylist')
             ->with('success', 'Category deleted successfully.');
     }
-    // public function view($id)
-    // {
-    //     $category = Category::find($id);
-    //     return view('admin.view', compact('category'));
-    // }
+  
 }

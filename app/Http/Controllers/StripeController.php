@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\PaymentIntent;
 
 class StripeController extends Controller
 {
@@ -17,7 +18,7 @@ class StripeController extends Controller
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
-        return view('frontend.checkout', compact('subtotal'));
+        return view('frontend.checkout', compact('subtotal', 'cart'));
     }
 
 
@@ -60,6 +61,32 @@ class StripeController extends Controller
     {
         return view('frontend.cancel');
     }
+
+     public function payment(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $amount = 1999; // Amount in cents (e.g. $19.99)
+        try {
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $amount,
+                'currency' => 'usd',
+                'payment_method' => $request->payment_method, // frontend se aa raha ID
+                'confirmation_method' => 'manual',
+                'confirm' => true,
+            ]);
+
+            if($paymentIntent->status === 'succeeded') {
+                return response()->json(['success' => true, 'paymentIntent' => $paymentIntent]);
+            } else {
+                return response()->json(['success' => false, 'status' => $paymentIntent->status]);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
 }
+
 
 

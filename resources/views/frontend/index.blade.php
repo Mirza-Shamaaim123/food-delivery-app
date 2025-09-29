@@ -145,7 +145,7 @@
                                         @endif
                                     </h4>
 
-                                    <h4 class="box-title"><a href="#">{{ $product->name }}</a></h4>
+                                    <h4 class="box-title"><a href="{{ route('frontend.shop.details', $product->id) }}">{{ $product->name }}</a></h4>
                                     <p class="box-text">{{ Str::limit($product->description, 60) }}</p>
                                 </div>
                             </div>

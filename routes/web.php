@@ -31,8 +31,12 @@ Route::post('/billing-details', [FrontendController::class, 'store'])->name('che
 
 Route::get('/checkout', [StripeController::class, 'checkout'])->name('frontend.checkout');
 Route::post('/checkout/session', [StripeController::class, 'createCheckoutSession'])->name('checkout.session');
+Route::post('/stripe/payment', [StripeController::class, 'payment'])->name('stripe.payment');
 Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
 Route::get('/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+// web.php
+Route::post('/create-payment-intent', [FrontendController::class, 'createPaymentIntent']);
+
 
 
 

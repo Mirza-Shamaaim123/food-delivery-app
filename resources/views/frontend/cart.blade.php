@@ -82,7 +82,7 @@
                                         <button type="submit" class="th-btn style2 style-radius">Apply Coupon</button>
                                     </form>
                                 </div> --}}
-                            <button type="submit" class="th-btn style2 style-radius">Update cart</button>
+                            {{-- <button type="submit" class="th-btn style2 style-radius">Update cart</button> --}}
                             <a href="{{ route('frontend.shop') }}" class="th-btn style3 style-radius">Continue
                                 Shopping</a>
                         </td>

@@ -26,7 +26,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Available Items</th>
+                    {{-- <th>Available Items</th> --}}
                     <th>Image</th>
                     <th>Status</th>
                     <th>Created At</th>
@@ -38,7 +38,7 @@
                     <tr>
                          <td>{{ $categories->firstItem() + $loop->index }}</td>
                         <td>{{ $cat->name }}</td>
-                        <td>{{ $cat->available_items }}</td>
+                        {{-- <td>{{ $cat->available_items }}</td> --}}
 
                         <td>
                             @if ($cat->image)
@@ -119,9 +119,9 @@
                             {{-- <label for="description">Description</label>
             <textarea id="description" name="description" placeholder="Enter category description" class="form-control"></textarea> --}}
 
-                            <label for="available_items">Available Items</label>
+                            {{-- <label for="available_items">Available Items</label>
                             <input type="number" id="available_items" name="available_items" min="0"
-                                placeholder="Enter available items" class="form-control" required>
+                                placeholder="Enter available items" class="form-control" required> --}}
 
                             <label for="status">Status</label>
                             <select name="status" class="form-control" required>
@@ -158,9 +158,9 @@
                     <label for="update_name">Category Name</label>
                     <input type="text" id="update_name" name="name" class="form-control" required>
 
-                    <label for="update_available_items">Available Items</label>
+                    {{-- <label for="update_available_items">Available Items</label>
                     <input type="number" id="update_available_items" name="available_items" min="0"
-                        class="form-control" required>
+                        class="form-control" required> --}}
 
                     <label for="update_status">Status</label>
                     <select id="update_status" name="status" class="form-control" required>
@@ -272,7 +272,7 @@
                 // Populate modal fields
                 document.getElementById('update_category_id').value = this.dataset.id;
                 document.getElementById('update_name').value = this.dataset.name;
-                document.getElementById('update_available_items').value = this.dataset.available;
+                // document.getElementById('update_available_items').value = this.dataset.available;
                 document.getElementById('update_status').value = this.dataset.status;
 
                 // ✅ Image preview
