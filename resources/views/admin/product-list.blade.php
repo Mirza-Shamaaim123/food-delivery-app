@@ -12,10 +12,10 @@
 
         <style>
             /* body {
-     font-family: 'Inter', sans-serif;
-                                                                                                                                                                                                                                                  background-color: #f9f9f9;
-                                                                                                                                                                                                                                                  padding: 30px;
-                                                                                                                                                                                                                                            } */
+                     font-family: 'Inter', sans-serif;
+                                                                                                                                                                                                                                                                  background-color: #f9f9f9;
+                                                                                                                                                                                                                                                                  padding: 30px;
+                                                                                                                                                                                                                                                            } */
 
             h2 {
                 font-size: 24px;
@@ -175,7 +175,7 @@
                         <th>ID</th>
                         <th>NAME</th>
                         <th>PRICE</th>
-                        <th>STOCK</th>
+                        {{-- <th>STOCK</th> --}}
                         <th>IMAGE</th>
                         <th>STATUS</th>
                         <th>CREATED AT</th>
@@ -189,14 +189,14 @@
                             <td>{{ $product->name }}</td>
 
                             <td>Rs. {{ number_format($product->price, 2) }}</td>
-
+                            {{-- 
                             <td>
                                 @if ($product->in_stock == 1)
                                     <span class="badge bg-success">In Stock</span>
                                 @else
                                     <span class="badge bg-danger">Out of Stock</span>
                                 @endif
-                            </td>
+                            </td> --}}
                             {{-- <td>{{ $product->description }}</td> --}}
                             <td>
                                 @if ($product->image)
@@ -213,11 +213,7 @@
                                     <span class="badge bg-danger">Inactive</span>
                                 @endif
                             </td>
-                            {{-- @if ($product->status == 'active')
-                                <span class="badge bg-success">Active</span>
-                            @else
-                                <span class="badge bg-danger">Inactive</span>
-                            @endif --}}
+
                             <td>{{ $product->created_at->format('d-m-Y') }}</td>
                             <td class="position-relative">
                                 <div class="dropdown text-center"> {{-- ✅ Center align --}}
@@ -323,15 +319,15 @@
 
                         <div class="mb-3">
                             <label class="form-label">Description</label>
-                            <textarea name="description" class="form-control"></textarea>
+                            <textarea name="description" id="description" class="form-control"></textarea>
                         </div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label">Stock Availability</label>
                             <select name="in_stock" class="form-control" required>
                                 <option value="1">In Stock</option>
                                 <option value="0">Out of Stock</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="mb-3">
                             <label for="status">Category</label>
 
@@ -435,16 +431,16 @@
                         <!-- Description -->
                         <div class="mb-3">
                             <label for="editDescription" class="form-label">Description</label>
-                            <textarea class="form-control" name="description" id="editDescription" rows="3"></textarea>
+                            <textarea name="description" id="editDescription" class="form-control"></textarea>
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label">Stock Availability</label>
                             <select name="in_stock" id="editInStock" class="form-control" required>
                                 <option value="1">In Stock</option>
                                 <option value="0">Out of Stock</option>
                             </select>
-                        </div>
+                        </div> --}}
 
                         <!-- Category -->
                         <div class="mb-3">
@@ -585,9 +581,20 @@
                 document.getElementById('editSku').value = product.sku; // ✅ SKU set
                 document.getElementById('editPrice').value = product.price;
                 document.getElementById('editSalePrice').value = product.sale_price; // ✅ Sale Price set
-                document.getElementById('editDescription').value = product.description || '';
+                if (editDescriptionEditor) {
+                    editDescriptionEditor.setData(product.description || '');
+                } else {
+                    // Editor not ready yet; wait and retry
+                    setTimeout(() => {
+                        if (editDescriptionEditor) {
+                            editDescriptionEditor.setData(product.description || '');
+                        }
+                    }, 300);
+                }
+
+
                 document.getElementById('editStatus').value = product.status;
-                document.getElementById('editInStock').value = product.in_stock; // ✅ In Stock set
+                // document.getElementById('editInStock').value = product.in_stock; // ✅ In Stock set
                 const isFeaturedSelect = document.getElementById('is_featured_on_homepage');
                 isFeaturedSelect.value = product.is_featured_on_homepage; // Set the value (Yes or No)
 
@@ -666,6 +673,23 @@
                     });
                 });
             });
+
+            let editDescriptionEditor;
+
+            ClassicEditor
+                .create(document.querySelector('#editDescription'))
+                .then(editor => {
+                    editDescriptionEditor = editor;
+                })
+                .catch(error => {
+                    console.error('CKEditor initialization failed:', error);
+                });
+
+            ClassicEditor
+                .create(document.querySelector('#description'))
+                .catch(error => {
+                    console.error(error);
+                });
         </script>
     @endpush
 @endsection

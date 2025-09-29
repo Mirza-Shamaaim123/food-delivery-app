@@ -38,5 +38,14 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
+//     public function getUsageCount()
+// {
+//     return $this->products()->count();  // 'products' is the relationship method
+// }
+public function products()
+{
+    return $this->hasMany(Product::class, 'category_id', 'id');
+}
+
 }
 

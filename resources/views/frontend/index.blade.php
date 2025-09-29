@@ -64,7 +64,8 @@
                                     <h3 class="box-title">
                                         <a href="#">{{ $category->name }}</a>
                                     </h3>
-                                    <p class="box-subtitle">{{ $category->available_items }} Items Available</p>
+                                    
+                                   <p class="box-subtitle">{{  $category->products_count }} items Avaliable</p>
                                 </div>
                             </div>
                         @endforeach

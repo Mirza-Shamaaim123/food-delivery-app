@@ -19,7 +19,7 @@
         <div class="container checkout">
             {{-- <div class="woocommerce-form-login-toggle"> --}}
             {{-- Sirf guest users ko show karo --}}
-            @guest
+          
                 <div class="woocommerce-info checkout">
                     Returning customer? <a href="#" class="showlogin">Click here to login</a>
                 </div>
@@ -49,8 +49,9 @@
                             </p>
                         </div>
                     </form>
-                </div>
-        @endguest
+                
+      
+        </div>
         </div>
         <h4 class="mt-4 pt-lg-2 fw-semibold checkout">Your Order</h4>
         <form action="#" class="woocommerce-cart-form checkout">
