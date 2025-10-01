@@ -8,6 +8,7 @@ class BillingDetail extends Model
 {
     //
     protected $fillable = [
+       
         'country',
         'first_name',
         'last_name',
@@ -20,4 +21,9 @@ class BillingDetail extends Model
         'phone_number',
         'payment_method',
     ];
+// public function order()
+// {
+//     return $this->belongsTo(Order::class, 'order_id');
+// }
+
 }

@@ -26,6 +26,9 @@ Route::post('/update-cart/{id}', [FrontendController::class, 'updateCart'])->nam
 Route::get('/remove-from-cart/{id}', [FrontendController::class, 'removeFromCart'])->name('frontend.removeFromCart');
 Route::post('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('frontend.applyCoupon');
 Route::post('/billing-details', [FrontendController::class, 'store'])->name('checkout.store');
+// Route::post('/place-order', [FrontendController::class, 'store'])->name('order.store');
+// Route::get('/stripe-success', [StripeController::class, 'success'])->name('stripe.success');
+
 
 
 

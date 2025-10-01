@@ -10,21 +10,29 @@ use App\Models\User;
 use  Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\BillingDetail;
+use App\Models\Order;
 use App\Models\ShippingDetail;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Stripe\PaymentIntent;
+use Illuminate\Support\Facades\Auth;
+
+use Cart;   // ✅ package ka alias
+
+
+
+
 
 class FrontendController extends Controller
 {
     //
     public function index()
     {
-       $categories = Category::withCount('products')->has('products')->get();
+        $categories = Category::withCount('products')->has('products')->get();
 
- 
-          $featuredProducts = Product::where('is_featured_on_homepage', 'Yes')->limit(4)->get();
-       
+
+        $featuredProducts = Product::where('is_featured_on_homepage', 'Yes')->limit(4)->get();
+
         return view('frontend.index', compact('categories', 'featuredProducts'));
     }
     public function shop()
@@ -184,31 +192,83 @@ class FrontendController extends Controller
     public function store(Request $request)
     {
         // 🔹 Validate billing
-        $validator = Validator::make($request->all(), [
-            'country' => 'required|string|max:2',
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
-            'company_name' => 'nullable|string|max:255',
-            'street_address' => 'required|string|max:255',
-            'apartment_suite_unit' => 'nullable|string|max:255',
-            'city' => 'required|string|max:100',
-            'postcode_zip' => 'required|string|max:20',
-            'email_address' => 'required|email|max:255',
-            'phone_number' => 'required|string|max:20',
+        $request->validate([
+            // Billing
+            'billing_first_name' => 'required',
+            'billing_last_name' => 'required',
+            'billing_email_address' => 'required|email',
+            'billing_phone_number' => 'required',
+            'billing_street_address' => 'required',
+            'billing_city' => 'required',
+            'billing_country' => 'required',
+            'billing_postcode_zip' => 'required',
+
+            // Shipping
+            'shipping_first_name' => 'nullable|string',
+            'shipping_last_name' => 'nullable|string',
+            'shipping_street_address' => 'nullable|string',
+            'shipping_city' => 'nullable|string',
+            'shipping_country' => 'nullable|string',
+            'shipping_postcode_zip' => 'nullable|string',
+
+            // Payment
             'payment_method' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
 
-        // 🔹 Save billing
-        $billing = BillingDetail::create($validator->validated());
+        // 🔹 1️⃣ Save order summary + full billing & shipping info
+        $order = Order::create([
+            'user_id' => Auth::id() ?? null,
+            // Billing
+            'billing_first_name' => $request->billing_first_name,
+            'billing_last_name' => $request->billing_last_name,
+            'billing_company_name' => $request->billing_company_name,
+            'billing_street_address' => $request->billing_street_address,
+            'billing_apartment_suite_unit' => $request->billing_apartment_suite_unit,
+            'billing_city' => $request->billing_city,
+            'billing_country' => $request->billing_country,
+            'billing_postcode_zip' => $request->billing_postcode_zip,
+            'billing_email_address' => $request->billing_email_address,
+            'billing_phone_number' => $request->billing_phone_number,
 
-        // 🔹 Save shipping (agar ticked hai)
-        if ($request->has('ship_to_different_address')) {
+            // Shipping
+            'shipping_first_name' => $request->shipping_first_name,
+            'shipping_last_name' => $request->shipping_last_name,
+            'shipping_company_name' => $request->shipping_company_name,
+            'shipping_street_address' => $request->shipping_street_address,
+            'shipping_apartment_suite_unit' => $request->shipping_apartment_suite_unit,
+            'shipping_city' => $request->shipping_city,
+            'shipping_country' => $request->shipping_country,
+            'shipping_postcode_zip' => $request->shipping_postcode_zip,
+            'shipping_email_address' => $request->shipping_email_address,
+            'shipping_phone_number' => $request->shipping_phone_number,
+
+            // Order info
+            'payment_method' => $request->payment_method,
+            'status' => 'paid',
+            'total' => $request->total,
+        ]);
+
+        // 🔹 2️⃣ Save billing table separately
+        BillingDetail::create([
+            'order_id' => $order->id,
+            'first_name' => $request->billing_first_name,
+            'last_name' => $request->billing_last_name,
+            'company_name' => $request->billing_company_name,
+            'street_address' => $request->billing_street_address,
+            'apartment_suite_unit' => $request->billing_apartment_suite_unit,
+            'city' => $request->billing_city,
+            'country' => $request->billing_country,
+            'postcode_zip' => $request->billing_postcode_zip,
+            'email_address' => $request->billing_email_address,
+            'phone_number' => $request->billing_phone_number,
+        ]);
+
+        // 🔹 3️⃣ Save shipping table separately
+        // 🔹 3️⃣ Save shipping table separately (agar ship to different address checked ho)
+     
             ShippingDetail::create([
-                'order_id' => $billing->id,
+                'order_id' => $order->id,
                 'first_name' => $request->shipping_first_name,
                 'last_name' => $request->shipping_last_name,
                 'company_name' => $request->shipping_company_name,
@@ -220,9 +280,10 @@ class FrontendController extends Controller
                 'email_address' => $request->shipping_email_address,
                 'phone_number' => $request->shipping_phone_number,
             ]);
-        }
 
-        // 🔹 Agar Stripe select hai
+
+
+        //   🔹 Agar Stripe select hai
         if ($request->payment_method === 'stripe') {
             Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -232,7 +293,7 @@ class FrontendController extends Controller
                     'price_data' => [
                         'currency' => 'usd',
                         'product_data' => [
-                            'name' => 'Order #' . $billing->id,
+                            'name' => 'Order #' . $order->id,
                         ],
                         'unit_amount' => 5000, // yahan amount cents me aayega (ex: $50 = 5000)
                     ],
@@ -241,32 +302,56 @@ class FrontendController extends Controller
                 'mode' => 'payment',
                 'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('stripe.cancel'),
+                'metadata' => [
+                    'order_id' => $order->id, // ✅ pass order_id
+                ]
             ]);
 
             // ✅ Redirect Stripe hosted checkout page par
             // return redirect($session->url);
         }
 
-        // 🔹 Agar PayPal ya dusra method hai
+        //  🔹 Agar PayPal ya dusra method hai
         return back()->with('success', 'Billing & Shipping details submitted successfully.');
     }
 
-   public function createPaymentIntent(Request $request) 
-{
-    Stripe::setApiKey(config('services.stripe.secret')); // ✅ secret key (sk_test)
 
-    $amount = $request->amount; // frontend se aya hua cents me amount
+    // public function success(Request $request)
+    // {
+    //     $session_id = $request->query('session_id');
+    //     if (!$session_id) {
+    //         return redirect('/')->with('error', 'Invalid session.');
+    //     }
 
-    $paymentIntent = PaymentIntent::create([
-        'amount' => $amount,
-        'currency' => 'usd',
-        'automatic_payment_methods' => ['enabled' => true],
-    ]);
+    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+    //     $session = \Stripe\Checkout\Session::retrieve($session_id);
 
-    return response()->json([
-        'clientSecret' => $paymentIntent->client_secret
-    ]);
+    //     $order_id = $session->metadata->order_id;
+    //     $order = Order::find($order_id);
+
+    //     if ($session->payment_status === 'paid') {
+    //         $order->status = 'paid';
+    //         $order->save();
+    //     }
+
+    //     return view('frontend.success', compact('order'));
+    // }
+
+
+    public function createPaymentIntent(Request $request)
+    {
+        Stripe::setApiKey(config('services.stripe.secret')); // ✅ secret key (sk_test)
+
+        $amount = $request->amount; // frontend se aya hua cents me amount
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        return response()->json([
+            'clientSecret' => $paymentIntent->client_secret
+        ]);
+    }
 }
-
-}
-

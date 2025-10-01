@@ -126,7 +126,7 @@
                 <div class="col-lg-6">
                     <h2 class="h4 fw-semibold">Billing Details</h2>
                     <div class="row">
-                        <div class="col-12 form-group"><select name="country" id="billing_country" class="form-select">
+                        <div class="col-12 form-group"><select name="billing_country" id="billing_country" class="form-select">
                                 <option value="UK">United Kingdom (UK)</option>
                                 <option value="US">United States (US)</option>
                                 <option value="GQ">Equatorial Guinea (GQ)</option>
@@ -152,50 +152,50 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <span class="text-danger error-message" data-error-for="first_name"></span>
-                            <input type="text" name="first_name" id="billing_first_name" class="form-control"
+                            <input type="text" name="billing_first_name" id="billing_first_name" class="form-control"
                                 placeholder="First Name">
 
                         </div>
                         <div class="col-md-6 form-group">
                             <span class="text-danger error-message" data-error-for="last_name"></span>
-                            <input type="text" name="last_name" id="billing_last_name" class="form-control"
+                            <input type="text" name="billing_last_name" id="billing_last_name" class="form-control"
                                 placeholder="Last Name">
 
                         </div>
                         <div class="col-12 form-group">
                             <span class="text-danger error-message" data-error-for="company_name"></span>
-                            <input type="text" name="company_name" id="billing_company" class="form-control"
+                            <input type="text" name="billing_company_name" id="billing_company" class="form-control"
                                 placeholder="Your Company Name">
 
                         </div>
                         <div class="col-12 form-group">
                             <span class="text-danger error-message" data-error-for="street_address"></span>
-                            <input type="text" name="street_address" id="billing_address" class="form-control"
+                            <input type="text" name="billing_street_address" id="billing_address" class="form-control"
                                 placeholder="Street Address">
                             <span class="text-danger error-message" data-error-for="apartment_suite_unit"></span>
-                            <input type="text" name="apartment_suite_unit" id="billing_apartment_suite_unit"
+                            <input type="text" name="billing_apartment_suite_unit" id="billing_apartment_suite_unit"
                                 class="form-control" placeholder="Apartment, suite, unit etc. (optional)">
 
                         </div>
                         <div class="col-12 form-group">
                             <span class="text-danger error-message" data-error-for="city"></span>
-                            <input type="text" name="city" class="form-control" id="billing_city"
+                            <input type="text" name="billing_city" class="form-control" id="billing_city"
                                 placeholder="Town / City">
 
                         </div>
 
                         <div class="col-12 form-group">
                             <span class="text-danger error-message" data-error-for="postcode_zip"></span>
-                            <input type="text" name="postcode_zip" class="form-control" id="billing_postcode"
+                            <input type="text" name="billing_postcode_zip" class="form-control" id="billing_postcode"
                                 placeholder="Postcode / Zip">
 
                         </div>
                         <div class="col-12 form-group">
                             <span class="text-danger error-message" data-error-for="email_address"></span>
-                            <input type="text" name="email_address" class="form-control" id="billing_email"
+                            <input type="text" name="billing_email_address" class="form-control" id="billing_email"
                                 placeholder="Email Address">
                             <span class="text-danger error-message" data-error-for="phone_number"></span>
-                            <input type="text" name="phone_number" class="form-control" id="billing_phone"
+                            <input type="text" name="billing_phone_number" class="form-control" id="billing_phone"
                                 placeholder="Phone number">
 
                         </div>
@@ -305,15 +305,12 @@
                         </li>
                     </ul>
                     <div class="form-row place-order">
-                        <button type="submit" id="pay-with-stripe" class="th-btn style-radius style2">Place
+                        <button type="button" id="pay-with-stripe"   class="th-btn style-radius style2">Place
                             order</button>
                     </div>
                 </div>
             </div>
         </form>
-
-
-
         <script src="https://js.stripe.com/v3/"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -371,15 +368,6 @@
                 });
             });
         </script>
-
-
-
-
-
-
-
-
-        {{-- <script src="https://js.stripe.com/v3/"></script> --}}
 
         <script>
             // Publishable key (pk_test se start hoti hai)
