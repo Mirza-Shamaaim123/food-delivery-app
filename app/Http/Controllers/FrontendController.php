@@ -189,15 +189,32 @@ class FrontendController extends Controller
     }
 
 
+    public function checkout()
+    {
+       
+
+
+        $subtotal = 0;
+        $cart = session('cart', []);
+
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+        return view('frontend.checkout', compact('subtotal', 'cart'));
+    }
+
+
     public function store(Request $request)
     {
-        // 🔹 Validate billing
+        $paymentIntentId = $request->payment_intent_id ?? "manual_" . time(); // ye frontend se hidden input se aaya
+        // //    $paymentStatus = $paymentIntentId->status;
+        // // 🔹 Validate billing
         $request->validate([
             // Billing
             'billing_first_name' => 'required',
-            'billing_last_name' => 'required',
+            'billing_last_name'  => 'required',
             'billing_email_address' => 'required|email',
-            'billing_phone_number' => 'required',
+            'billing_phone_number'  => 'required',
             'billing_street_address' => 'required',
             'billing_city' => 'required',
             'billing_country' => 'required',
@@ -242,10 +259,13 @@ class FrontendController extends Controller
             'shipping_postcode_zip' => $request->shipping_postcode_zip,
             'shipping_email_address' => $request->shipping_email_address,
             'shipping_phone_number' => $request->shipping_phone_number,
+            'payment_method' => $request->payment_method ?? 'cod',
+
 
             // Order info
             'payment_method' => $request->payment_method,
-            'status' => 'paid',
+            'payment_intent_id' => $paymentIntentId,
+            'status' => 'pending', // ab ye defined hai
             'total' => $request->total,
         ]);
 
@@ -265,21 +285,21 @@ class FrontendController extends Controller
         ]);
 
         // 🔹 3️⃣ Save shipping table separately
-        // 🔹 3️⃣ Save shipping table separately (agar ship to different address checked ho)
-     
-            ShippingDetail::create([
-                'order_id' => $order->id,
-                'first_name' => $request->shipping_first_name,
-                'last_name' => $request->shipping_last_name,
-                'company_name' => $request->shipping_company_name,
-                'street_address' => $request->shipping_street_address,
-                'apartment_suite_unit' => $request->shipping_apartment_suite_unit,
-                'city' => $request->shipping_city,
-                'country' => $request->shipping_country,
-                'postcode_zip' => $request->shipping_postcode_zip,
-                'email_address' => $request->shipping_email_address,
-                'phone_number' => $request->shipping_phone_number,
-            ]);
+
+
+        ShippingDetail::create([
+            'order_id' => $order->id,
+            'first_name' => $request->shipping_first_name,
+            'last_name' => $request->shipping_last_name,
+            'company_name' => $request->shipping_company_name,
+            'street_address' => $request->shipping_street_address,
+            'apartment_suite_unit' => $request->shipping_apartment_suite_unit,
+            'city' => $request->shipping_city,
+            'country' => $request->shipping_country,
+            'postcode_zip' => $request->shipping_postcode_zip,
+            'email_address' => $request->shipping_email_address,
+            'phone_number' => $request->shipping_phone_number,
+        ]);
 
 
 
@@ -301,42 +321,20 @@ class FrontendController extends Controller
                 ]],
                 'mode' => 'payment',
                 'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('stripe.cancel'),
+                'cancel_url'  => route('stripe.cancel'),
                 'metadata' => [
                     'order_id' => $order->id, // ✅ pass order_id
                 ]
             ]);
-
-            // ✅ Redirect Stripe hosted checkout page par
-            // return redirect($session->url);
         }
-
         //  🔹 Agar PayPal ya dusra method hai
         return back()->with('success', 'Billing & Shipping details submitted successfully.');
     }
 
-
-    // public function success(Request $request)
-    // {
-    //     $session_id = $request->query('session_id');
-    //     if (!$session_id) {
-    //         return redirect('/')->with('error', 'Invalid session.');
-    //     }
-
-    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-    //     $session = \Stripe\Checkout\Session::retrieve($session_id);
-
-    //     $order_id = $session->metadata->order_id;
-    //     $order = Order::find($order_id);
-
-    //     if ($session->payment_status === 'paid') {
-    //         $order->status = 'paid';
-    //         $order->save();
-    //     }
-
-    //     return view('frontend.success', compact('order'));
-    // }
-
+    public function success(Order $order)
+    {
+        return view('frontend.success', compact('order'));
+    }
 
     public function createPaymentIntent(Request $request)
     {
@@ -353,5 +351,18 @@ class FrontendController extends Controller
         return response()->json([
             'clientSecret' => $paymentIntent->client_secret
         ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $order = Order::findOrFail($request->order_id);
+
+        $order->update([
+            'status' => $request->status,
+            'payment_status' => $request->payment_status,
+            'payment_intent_id' => $request->payment_intent_id
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }

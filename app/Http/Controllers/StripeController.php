@@ -10,16 +10,7 @@ use Stripe\PaymentIntent;
 class StripeController extends Controller
 {
     //
-       public function checkout()
-    {
-        $subtotal = 0;
-        $cart = session('cart', []);
-
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-        }
-        return view('frontend.checkout', compact('subtotal', 'cart'));
-    }
+  
 
 
 

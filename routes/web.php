@@ -26,16 +26,22 @@ Route::post('/update-cart/{id}', [FrontendController::class, 'updateCart'])->nam
 Route::get('/remove-from-cart/{id}', [FrontendController::class, 'removeFromCart'])->name('frontend.removeFromCart');
 Route::post('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('frontend.applyCoupon');
 Route::post('/billing-details', [FrontendController::class, 'store'])->name('checkout.store');
+// routes/web.php
+Route::post('/order/update-status', [FrontendController::class, 'updateStatus']);
+
 // Route::post('/place-order', [FrontendController::class, 'store'])->name('order.store');
 // Route::get('/stripe-success', [StripeController::class, 'success'])->name('stripe.success');
 
 
 
 
-Route::get('/checkout', [StripeController::class, 'checkout'])->name('frontend.checkout');
+Route::get('/checkout', [FrontendController::class, 'checkout'])->name('frontend.checkout');
 Route::post('/checkout/session', [StripeController::class, 'createCheckoutSession'])->name('checkout.session');
 Route::post('/stripe/payment', [StripeController::class, 'payment'])->name('stripe.payment');
-Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
+Route::get('/success', [StripeController::class, 'success'])->name('thankyou');
+// web.php
+Route::get('/order/success/{order}', [FrontendController::class, 'success'])->name('order.success');
+
 Route::get('/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 // web.php
 Route::post('/create-payment-intent', [FrontendController::class, 'createPaymentIntent']);

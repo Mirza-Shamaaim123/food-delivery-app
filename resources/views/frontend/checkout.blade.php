@@ -1,6 +1,6 @@
 @extends('frontend.layout.main')
 @section('content')
-      <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
+    <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -19,39 +19,39 @@
         <div class="container checkout">
             {{-- <div class="woocommerce-form-login-toggle"> --}}
             {{-- Sirf guest users ko show karo --}}
-          
-                <div class="woocommerce-info checkout">
-                    Returning customer? <a href="#" class="showlogin">Click here to login</a>
-                </div>
+
+            <div class="woocommerce-info checkout">
+                Returning customer? <a href="#" class="showlogin">Click here to login</a>
             </div>
-            <div class="row checkout">
-                <div class="col-12">
-                    <form action="#" method="POST" class="woocommerce-form-login mb-3">
-                        @csrf
-                        <div class="form-group">
-                            <label>Username or email *</label>
-                            <input type="text" name="email" class="form-control" placeholder="Username or email" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Password *</label>
-                            <input type="password" name="password" class="form-control" placeholder="Password" required>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-checkbox">
-                                <input type="checkbox" id="remembermylogin" name="remember">
-                                <label for="remembermylogin">Remember Me</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="th-btn style2 style-radius">Login</button>
-                            <p class="mt-3 mb-0">
-                                <a class="text-reset" href="#">Lost your password?</a>
-                            </p>
-                        </div>
-                    </form>
-                
-      
         </div>
+        <div class="row checkout">
+            <div class="col-12">
+                <form action="#" method="POST" class="woocommerce-form-login mb-3">
+                    @csrf
+                    <div class="form-group">
+                        <label>Username or email *</label>
+                        <input type="text" name="email" class="form-control" placeholder="Username or email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="remembermylogin" name="remember">
+                            <label for="remembermylogin">Remember Me</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="th-btn style2 style-radius">Login</button>
+                        <p class="mt-3 mb-0">
+                            <a class="text-reset" href="#">Lost your password?</a>
+                        </p>
+                    </div>
+                </form>
+
+
+            </div>
         </div>
         <h4 class="mt-4 pt-lg-2 fw-semibold checkout">Your Order</h4>
         <form action="#" class="woocommerce-cart-form checkout">
@@ -120,13 +120,15 @@
                 </tfoot>
             </table>
         </form>
-        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" class="woocommerce-checkout mt-40 checkout">
+        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form"
+            class="woocommerce-checkout mt-40 checkout">
             @csrf
             <div class="row">
                 <div class="col-lg-6">
                     <h2 class="h4 fw-semibold">Billing Details</h2>
                     <div class="row">
-                        <div class="col-12 form-group"><select name="billing_country" id="billing_country" class="form-select">
+                        <div class="col-12 form-group"><select name="billing_country" id="billing_country"
+                                class="form-select">
                                 <option value="UK">United Kingdom (UK)</option>
                                 <option value="US">United States (US)</option>
                                 <option value="GQ">Equatorial Guinea (GQ)</option>
@@ -170,8 +172,8 @@
                         </div>
                         <div class="col-12 form-group">
                             <span class="text-danger error-message" data-error-for="street_address"></span>
-                            <input type="text" name="billing_street_address" id="billing_address" class="form-control"
-                                placeholder="Street Address">
+                            <input type="text" name="billing_street_address" id="billing_address"
+                                class="form-control" placeholder="Street Address">
                             <span class="text-danger error-message" data-error-for="apartment_suite_unit"></span>
                             <input type="text" name="billing_apartment_suite_unit" id="billing_apartment_suite_unit"
                                 class="form-control" placeholder="Apartment, suite, unit etc. (optional)">
@@ -207,7 +209,7 @@
 
 
                 </div>
-                
+
                 <div class="col-lg-6">
                     <p id="ship-to-different-address"><input id="ship-to-different-address-checkbox" type="checkbox"
                             name="ship_to_different_address" value="1"> <label
@@ -279,8 +281,8 @@
                             placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                     </div>
                 </div>
-                </div>
-            
+            </div>
+
 
 
             <div class="mt-lg-3 mb-30">
@@ -294,9 +296,9 @@
                         <div id="stripe-form-container" style="display:none; margin-top:20px;">
                             <div id="card-element"><!-- Stripe injects card form here --></div>
                             <div id="card-errors" style="color:red; margin-top:10px;"></div>
-                            {{-- <button type="button" id="pay-with-stripe" class="th-btn style-radius style2 mt-3">
+                            <button type="button" id="pay-with-stripe" class="th-btn style-radius style2 mt-3">
                                 Pay with Stripe
-                            </button> --}}
+                            </button>
                         </div>
                         <!-- PayPal -->
                         <li class="wc_payment_method payment_method_paypal">
@@ -305,7 +307,8 @@
                         </li>
                     </ul>
                     <div class="form-row place-order">
-                        <button type="button" id="pay-with-stripe"   class="th-btn style-radius style2">Place
+                        <button type="submit" id="place-order" onclick="setPaymentMethod()"
+                            class="th-btn style-radius style2">Place
                             order</button>
                     </div>
                 </div>
@@ -369,13 +372,33 @@
             });
         </script>
 
+
+
+
+
+
         <script>
-            // Publishable key (pk_test se start hoti hai)
+            function setPaymentMethod() {
+                // Agar user ne kuch select nahi kiya to default COD save ho
+                if (!document.querySelector('input[name="payment_method"]:checked')) {
+                    let cod = document.createElement("input");
+                    cod.type = "hidden";
+                    cod.name = "payment_method";
+                    cod.value = "cod"; // ya manual
+                    document.getElementById("checkout-form").appendChild(cod);
+                }
+            }
+
+
+
+
+
+
             const stripe = Stripe("{{ config('services.stripe.key') }}");
             const elements = stripe.elements();
             const card = elements.create("card");
 
-            // Radio button toggle
+            // Toggle card form
             document.querySelectorAll('input[name="payment_method"]').forEach(el => {
                 el.addEventListener("change", function(e) {
                     if (e.target.value === "stripe") {
@@ -388,7 +411,7 @@
                 });
             });
 
-            // Pay button
+            // Stripe pay button
             document.getElementById("pay-with-stripe").addEventListener("click", async function() {
                 let response = await fetch("{{ url('/create-payment-intent') }}", {
                     method: "POST",
@@ -397,7 +420,7 @@
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
                     body: JSON.stringify({
-                        amount: {{ $subtotal * 100 }} // cents me bhejna
+                        amount: {{ $subtotal * 100 }} // cents
                     })
                 });
 
@@ -419,15 +442,23 @@
                 } else if (paymentIntent.status === "succeeded") {
                     document.getElementById("card-errors").textContent = "✅ Payment successful!";
                     let form = document.getElementById("checkout-form");
+
+                    // Save intent id
                     let hidden = document.createElement("input");
-                    hidden.setAttribute("type", "hidden");
-                    hidden.setAttribute("name", "payment_intent_id");
-                    hidden.setAttribute("value", paymentIntent.id);
+                    hidden.type = "hidden";
+                    hidden.name = "payment_intent_id";
+                    hidden.value = paymentIntent.id;
                     form.appendChild(hidden);
+
+                    // Set payment method stripe
+                    document.getElementById("payment_method_stripe").checked = true;
+
                     form.submit();
                 }
             });
+
         </script>
+
 
     </div>
     </div>
