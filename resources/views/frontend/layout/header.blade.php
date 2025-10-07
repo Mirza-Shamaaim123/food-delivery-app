@@ -222,7 +222,7 @@
                                                     <li><a href="shop-details.html">Shop Details</a></li>
                                                     <li><a href="cart.html">Cart Page</a></li>
                                                     <li><a href="{{ route('frontend.checkout') }}">Checkout</a></li>
-                                                    <li><a href="wishlist.html">Wishlist</a></li>
+                                                    <li><a href="{{ route('home.dashboard') }}">Wishlist</a></li>
                                                 </ul>
                                             </li>
                                             <li><a href="reservation.html">Reservation</a></li>

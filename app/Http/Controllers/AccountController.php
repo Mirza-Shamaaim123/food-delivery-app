@@ -35,9 +35,12 @@ public function authenticate(Request $request)
         // ✅ Role check karke redirect
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
-        } else {
+        } else if ($user->role === 'user') {
+            return redirect()->route('home.dashboard');
+        }else{
             return redirect()->route('home');
         }
+
     }
 
     return redirect()->back()->with('error', 'Invalid credentials');

@@ -18,7 +18,12 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        return view('frontend.dashboard');
+        return view('userdashboard.dashboard');
+    }
+
+    public function order()
+    {
+        return view('userdashboard.order');
     }
 
 
