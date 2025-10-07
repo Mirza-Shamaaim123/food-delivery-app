@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Stripe\PaymentIntent;
+use App\Models\Order;
 
 class StripeController extends Controller
 {
     //
-  
+
 
 
 
@@ -18,7 +19,7 @@ class StripeController extends Controller
 
 
     public function createCheckoutSession(Request $request)
-   
+
     {
         // dd("Controller hit hua!");
         Stripe::setApiKey(config('services.stripe.secret'));
@@ -40,20 +41,17 @@ class StripeController extends Controller
             'cancel_url' => route('stripe.cancel'),
         ]);
 
-      return response()->json(['id' => $session->id]);
+        return response()->json(['id' => $session->id]);
     }
 
-    public function success()
-    {
-        return view('frontend.success');
-    }
+ 
 
     public function cancel()
     {
         return view('frontend.cancel');
     }
 
-     public function payment(Request $request)
+    public function payment(Request $request)
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -67,17 +65,13 @@ class StripeController extends Controller
                 'confirm' => true,
             ]);
 
-            if($paymentIntent->status === 'succeeded') {
+            if ($paymentIntent->status === 'succeeded') {
                 return response()->json(['success' => true, 'paymentIntent' => $paymentIntent]);
             } else {
                 return response()->json(['success' => false, 'status' => $paymentIntent->status]);
             }
-
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 }
-
-
-

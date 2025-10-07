@@ -13,11 +13,12 @@ use App\Models\BillingDetail;
 use App\Models\Order;
 use App\Models\ShippingDetail;
 use Stripe\Stripe;
-use Stripe\Checkout\Session;
 use Stripe\PaymentIntent;
+use Stripe\Checkout\Session;
+
 use Illuminate\Support\Facades\Auth;
 
-use Cart;   // ✅ package ka alias
+
 
 
 
@@ -48,6 +49,8 @@ class FrontendController extends Controller
 
         return view('frontend.shop-details', compact('product', 'tags', 'reviews'));
     }
+
+  
 
     public function cart()
     {
@@ -191,7 +194,7 @@ class FrontendController extends Controller
 
     public function checkout()
     {
-       
+
 
 
         $subtotal = 0;
@@ -206,9 +209,8 @@ class FrontendController extends Controller
 
     public function store(Request $request)
     {
-        $paymentIntentId = $request->payment_intent_id ?? "manual_" . time(); // ye frontend se hidden input se aaya
-        // //    $paymentStatus = $paymentIntentId->status;
-        // // 🔹 Validate billing
+
+        //  🔹 Validate billing
         $request->validate([
             // Billing
             'billing_first_name' => 'required',
@@ -260,13 +262,8 @@ class FrontendController extends Controller
             'shipping_email_address' => $request->shipping_email_address,
             'shipping_phone_number' => $request->shipping_phone_number,
             'payment_method' => $request->payment_method ?? 'cod',
-
-
-            // Order info
-            'payment_method' => $request->payment_method,
-            'payment_intent_id' => $paymentIntentId,
             'status' => 'pending', // ab ye defined hai
-            'total' => $request->total,
+
         ]);
 
         // 🔹 2️⃣ Save billing table separately
@@ -300,41 +297,26 @@ class FrontendController extends Controller
             'email_address' => $request->shipping_email_address,
             'phone_number' => $request->shipping_phone_number,
         ]);
-
-
-
-        //   🔹 Agar Stripe select hai
-        if ($request->payment_method === 'stripe') {
-            Stripe::setApiKey(config('services.stripe.secret'));
-
-            $session = Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'product_data' => [
-                            'name' => 'Order #' . $order->id,
-                        ],
-                        'unit_amount' => 5000, // yahan amount cents me aayega (ex: $50 = 5000)
-                    ],
-                    'quantity' => 1,
-                ]],
-                'mode' => 'payment',
-                'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url'  => route('stripe.cancel'),
-                'metadata' => [
-                    'order_id' => $order->id, // ✅ pass order_id
-                ]
-            ]);
-        }
         //  🔹 Agar PayPal ya dusra method hai
-        return back()->with('success', 'Billing & Shipping details submitted successfully.');
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id
+        ]);
+    
     }
 
-    public function success(Order $order)
+       public function success(Request $request)
     {
-        return view('frontend.success', compact('order'));
+        $order = Order::find($request->order_id);
+        if ($order) {
+            $order->status = $request->status;
+            $order->payment_intent_id = $request->payment_intent;
+            $order->save();
+        }
+
+        return view('frontend.success');
     }
+
 
     public function createPaymentIntent(Request $request)
     {

@@ -10,12 +10,14 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('frontend.index')->name('index');
 // });
 Route::get('/', [FrontendController::class, 'index'])->name('home');
+Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('home.dashboard');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/shop', [FrontendController::class, 'shop'])->name('frontend.shop');
@@ -38,7 +40,7 @@ Route::post('/order/update-status', [FrontendController::class, 'updateStatus'])
 Route::get('/checkout', [FrontendController::class, 'checkout'])->name('frontend.checkout');
 Route::post('/checkout/session', [StripeController::class, 'createCheckoutSession'])->name('checkout.session');
 Route::post('/stripe/payment', [StripeController::class, 'payment'])->name('stripe.payment');
-Route::get('/success', [StripeController::class, 'success'])->name('thankyou');
+Route::get('/success', [FrontendController::class, 'success'])->name('stripe.success');
 // web.php
 Route::get('/order/success/{order}', [FrontendController::class, 'success'])->name('order.success');
 

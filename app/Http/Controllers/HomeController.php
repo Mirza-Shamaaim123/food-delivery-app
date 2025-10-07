@@ -15,6 +15,13 @@ class HomeController extends Controller
     //     // latest 4 products
       
     // }
+
+    public function dashboard()
+    {
+        return view('frontend.dashboard');
+    }
+
+
     public function about()
     {
         return view('frontend.about');

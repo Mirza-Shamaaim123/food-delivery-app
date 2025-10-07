@@ -29,7 +29,7 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku', // ✅ SKU must be unique
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric|lt:price', // ✅ Sale price must be less than regular price
-            'in_stock' => 'required|boolean', // ✅ Stock availability
+            // 'in_stock' => 'required|boolean', // ✅ Stock availability
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'category_id' => 'required|exists:categories,id',
@@ -44,7 +44,7 @@ class ProductController extends Controller
             $product->sku = $request->sku;
             $product->price = $request->price;
             $product->sale_price = $request->sale_price; // ✅ Add sale price
-            $product->in_stock = $request->in_stock; // ✅ Add stock availability
+            // $product->in_stock = $request->in_stock; // ✅ Add stock availability
             $product->description = $request->description;
             $product->category_id = $request->category_id;
             $product->sale_status = $request->sale_status; // ✅ Save sale status
@@ -70,7 +70,7 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku,' . $id, // ✅ same product allow
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric|lt:price', // ✅ sale price less than price
-            'in_stock' => 'required|boolean', // ✅ 1 = in stock, 0 = out of stock
+            // 'in_stock' => 'required|boolean', // ✅ 1 = in stock, 0 = out of stock
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'category_id' => 'required|exists:categories,id',
@@ -87,7 +87,7 @@ class ProductController extends Controller
         $product->sku = $request->sku;
         $product->price = $request->price;
         $product->sale_price = $request->sale_price;
-        $product->in_stock = $request->in_stock;
+        // $product->in_stock = $request->in_stock;
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->status = $request->status;
