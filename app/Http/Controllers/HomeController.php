@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
 
 class HomeController extends Controller
 {
@@ -23,7 +23,9 @@ class HomeController extends Controller
 
     public function order()
     {
-        return view('userdashboard.order');
+         $orders = Order::where('user_id', Auth::id())->get();
+        //  dd($orders);
+        return view('userdashboard.order', compact('orders'));
     }
 
     public function profile()

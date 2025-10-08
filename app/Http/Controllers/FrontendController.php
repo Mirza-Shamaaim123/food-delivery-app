@@ -52,7 +52,7 @@ class FrontendController extends Controller
         return view('frontend.shop-details', compact('product', 'tags', 'reviews'));
     }
 
-  
+
 
     public function cart()
     {
@@ -194,121 +194,124 @@ class FrontendController extends Controller
     }
 
 
-    public function checkout()
+    public function checkout(Product $product)
     {
 
 
 
         $subtotal = 0;
         $cart = session('cart', []);
+       $product_name = $product->name;
 
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
-        return view('frontend.checkout', compact('subtotal', 'cart'));
+        return view('frontend.checkout', compact('subtotal', 'cart', 'product_name'));
     }
 
-public function store(Request $request)
-{
-    try {
-        // 🔹 Validate request
-        $request->validate([
-            // Billing
-            'billing_first_name' => 'required',
-            'billing_last_name'  => 'required',
-            'billing_email_address' => 'required|email',
-            'billing_phone_number'  => 'required',
-            'billing_street_address' => 'required',
-            'billing_city' => 'required',
-            'billing_country' => 'required',
-            'billing_postcode_zip' => 'required',
+    public function store(Request $request)
+    {
+        try {
 
-            // Shipping
-            'shipping_first_name' => 'nullable|string',
-            'shipping_last_name' => 'nullable|string',
-            'shipping_street_address' => 'nullable|string',
-            'shipping_city' => 'nullable|string',
-            'shipping_country' => 'nullable|string',
-            'shipping_postcode_zip' => 'nullable|string',
+            // 🔹 Validate request
+            $request->validate([
+                // Billing
+                'billing_first_name' => 'required',
+                'billing_last_name'  => 'required',
+                'billing_email_address' => 'required|email',
+                'billing_phone_number'  => 'required',
+                'billing_street_address' => 'required',
+                'billing_city' => 'required',
+                'billing_country' => 'required',
+                'billing_postcode_zip' => 'required',
 
-            // Payment
-            'payment_method' => 'required|string',
-        ]);
+                // Shipping
+                'shipping_first_name' => 'nullable|string',
+                'shipping_last_name' => 'nullable|string',
+                'shipping_street_address' => 'nullable|string',
+                'shipping_city' => 'nullable|string',
+                'shipping_country' => 'nullable|string',
+                'shipping_postcode_zip' => 'nullable|string',
 
-        // 🔹 1️⃣ Create Order
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'billing_first_name' => $request->billing_first_name,
-            'billing_last_name' => $request->billing_last_name,
-            'billing_company_name' => $request->billing_company_name,
-            'billing_street_address' => $request->billing_street_address,
-            'billing_apartment_suite_unit' => $request->billing_apartment_suite_unit,
-            'billing_city' => $request->billing_city,
-            'billing_country' => $request->billing_country,
-            'billing_postcode_zip' => $request->billing_postcode_zip,
-            'billing_email_address' => $request->billing_email_address,
-            'billing_phone_number' => $request->billing_phone_number,
-            'shipping_first_name' => $request->shipping_first_name,
-            'shipping_last_name' => $request->shipping_last_name,
-            'shipping_company_name' => $request->shipping_company_name,
-            'shipping_street_address' => $request->shipping_street_address,
-            'shipping_apartment_suite_unit' => $request->shipping_apartment_suite_unit,
-            'shipping_city' => $request->shipping_city,
-            'shipping_country' => $request->shipping_country,
-            'shipping_postcode_zip' => $request->shipping_postcode_zip,
-            'shipping_email_address' => $request->shipping_email_address,
-            'shipping_phone_number' => $request->shipping_phone_number,
-            'payment_method' => $request->payment_method ?? 'cod',
-            'status' => 'pending',
-        ]);
+                // Payment
+                'payment_method' => 'required|string',
+            ]);
 
-        // 🔹 2️⃣ Save Billing & Shipping separately
-        BillingDetail::create([
-            'order_id' => $order->id,
-            'first_name' => $request->billing_first_name,
-            'last_name' => $request->billing_last_name,
-            'company_name' => $request->billing_company_name,
-            'street_address' => $request->billing_street_address,
-            'apartment_suite_unit' => $request->billing_apartment_suite_unit,
-            'city' => $request->billing_city,
-            'country' => $request->billing_country,
-            'postcode_zip' => $request->billing_postcode_zip,
-            'email_address' => $request->billing_email_address,
-            'phone_number' => $request->billing_phone_number,
-        ]);
+            // 🔹 1️⃣ Create Order
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'product_name' => $request->product_name,
+                'total_amount' => $request->total_amount,
+                'billing_first_name' => $request->billing_first_name,
+                'billing_last_name' => $request->billing_last_name,
+                'billing_company_name' => $request->billing_company_name,
+                'billing_street_address' => $request->billing_street_address,
+                'billing_apartment_suite_unit' => $request->billing_apartment_suite_unit,
+                'billing_city' => $request->billing_city,
+                'billing_country' => $request->billing_country,
+                'billing_postcode_zip' => $request->billing_postcode_zip,
+                'billing_email_address' => $request->billing_email_address,
+                'billing_phone_number' => $request->billing_phone_number,
+                'shipping_first_name' => $request->shipping_first_name,
+                'shipping_last_name' => $request->shipping_last_name,
+                'shipping_company_name' => $request->shipping_company_name,
+                'shipping_street_address' => $request->shipping_street_address,
+                'shipping_apartment_suite_unit' => $request->shipping_apartment_suite_unit,
+                'shipping_city' => $request->shipping_city,
+                'shipping_country' => $request->shipping_country,
+                'shipping_postcode_zip' => $request->shipping_postcode_zip,
+                'shipping_email_address' => $request->shipping_email_address,
+                'shipping_phone_number' => $request->shipping_phone_number,
+                'payment_method' => $request->payment_method ?? 'cod',
+                'status' => 'pending',
+            ]);
 
-        ShippingDetail::create([
-            'order_id' => $order->id,
-            'first_name' => $request->shipping_first_name,
-            'last_name' => $request->shipping_last_name,
-            'company_name' => $request->shipping_company_name,
-            'street_address' => $request->shipping_street_address,
-            'apartment_suite_unit' => $request->shipping_apartment_suite_unit,
-            'city' => $request->shipping_city,
-            'country' => $request->shipping_country,
-            'postcode_zip' => $request->shipping_postcode_zip,
-            'email_address' => $request->shipping_email_address,
-            'phone_number' => $request->shipping_phone_number,
-        ]);
+            // 🔹 2️⃣ Save Billing & Shipping separately
+            BillingDetail::create([
+                'order_id' => $order->id,
+                'first_name' => $request->billing_first_name,
+                'last_name' => $request->billing_last_name,
+                'company_name' => $request->billing_company_name,
+                'street_address' => $request->billing_street_address,
+                'apartment_suite_unit' => $request->billing_apartment_suite_unit,
+                'city' => $request->billing_city,
+                'country' => $request->billing_country,
+                'postcode_zip' => $request->billing_postcode_zip,
+                'email_address' => $request->billing_email_address,
+                'phone_number' => $request->billing_phone_number,
+            ]);
 
-        // 🔹 3️⃣ Return JSON success
-        return response()->json([
-            'success' => true,
-            'order_id' => $order->id
-        ]);
+            ShippingDetail::create([
+                'order_id' => $order->id,
+                'first_name' => $request->shipping_first_name,
+                'last_name' => $request->shipping_last_name,
+                'company_name' => $request->shipping_company_name,
+                'street_address' => $request->shipping_street_address,
+                'apartment_suite_unit' => $request->shipping_apartment_suite_unit,
+                'city' => $request->shipping_city,
+                'country' => $request->shipping_country,
+                'postcode_zip' => $request->shipping_postcode_zip,
+                'email_address' => $request->shipping_email_address,
+                'phone_number' => $request->shipping_phone_number,
+            ]);
 
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 500);
+            // 🔹 3️⃣ Return JSON success
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
-}
 
     // public function store(Request $request)
     // {
@@ -369,8 +372,8 @@ public function store(Request $request)
     //         'status' => 'pending', // ab ye defined hai
 
     //     ]);
-       
-        
+
+
 
     //     // 🔹 2️⃣ Save billing table separately
     //     BillingDetail::create([
@@ -408,13 +411,13 @@ public function store(Request $request)
     //         'success' => true,
     //         'order_id' => $order->id
     //     ]);
-    
+
     // }
 
-       public function success(Request $request)
+    public function success(Request $request)
     {
         // dd(Auth::user());
-        
+
         $order = Order::find($request->order_id);
         if ($order) {
             $order->status = $request->status;

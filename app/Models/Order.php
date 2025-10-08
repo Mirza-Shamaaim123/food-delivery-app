@@ -8,6 +8,9 @@ class Order extends Model
 {
     //
      protected $fillable = [
+        'user_id',
+        'product_name',
+        'total_amount',
         'billing_first_name',
         'billing_last_name',
         'billing_company_name',
@@ -33,4 +36,5 @@ class Order extends Model
         'payment_method',
         'status',
     ];
+
 }
