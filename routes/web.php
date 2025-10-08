@@ -24,6 +24,7 @@ Route::post('/profile/update', [HomeController::class, 'update'])->name('profile
 Route::get('/order', [HomeController::class, 'order'])->middleware('auth')->name('user.order');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
+Route::get('/blog', [HomeController::class, 'blog'])->name('home.blog');
 Route::get('/shop', [FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shop/details/{id}', [FrontendController::class, 'details'])->name('frontend.shop.details');
 Route::get('/cart', [FrontendController::class, 'cart'])->name('frontend.cart');

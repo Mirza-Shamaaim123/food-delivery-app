@@ -236,7 +236,7 @@
                                     </li>
                                     <li class="menu-item-has-children"><a href="#">BLOG</a>
                                         <ul class="sub-menu">
-                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="{{ route('home.blog') }}">Blog</a></li>
                                             <li><a href="blog-details.html">Blog Details</a></li>
                                         </ul>
                                     </li>

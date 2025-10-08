@@ -69,6 +69,10 @@ class HomeController extends Controller
     return back()->with('success', 'Profile updated successfully!');
 }
 
+public function blog(){
+    return view('frontend.blog');
+}
+
 
 
 
