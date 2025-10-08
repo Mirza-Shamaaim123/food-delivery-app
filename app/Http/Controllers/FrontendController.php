@@ -196,16 +196,25 @@ class FrontendController extends Controller
 
     public function checkout(Product $product)
     {
-
-
-
         $subtotal = 0;
         $cart = session('cart', []);
-       $product_name = $product->name;
+        $product_name = $product->name;
 
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
+
+        if (!empty($cart)) {
+            $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+            $product_name = collect($cart)->pluck('name')->join(', ');
+        } elseif ($product) {
+            // Fallback for single product checkout
+            $subtotal = $product->price;
+            $product_name = $product->name;
+        }
+
+
+
         return view('frontend.checkout', compact('subtotal', 'cart', 'product_name'));
     }
 

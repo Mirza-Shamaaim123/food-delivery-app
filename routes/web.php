@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware('auth')->name('home.dashboard');
 Route::get('/profile', [HomeController::class, 'profile'])->middleware('auth')->name('user.profile');
+Route::post('/profile/update', [HomeController::class, 'update'])->name('profile.update');
+
 Route::get('/order', [HomeController::class, 'order'])->middleware('auth')->name('user.order');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');

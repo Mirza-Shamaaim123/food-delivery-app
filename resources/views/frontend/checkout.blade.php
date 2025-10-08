@@ -448,9 +448,8 @@
                             let formData = new FormData(form);
                             formData.append("payment_intent_id", paymentIntent.id);
                             formData.append("status", paymentIntent.status); // ✅ send real status
-                            formData.append("product_name", "{{ $product_name }}");
-
-                            formData.append("total_amount", "{{ $subtotal }}");
+                            formData.append("product_name", @json($product_name));
+                            formData.append("total_amount", @json($subtotal));
 
                             // Save order to DB
                             let saveOrder = await fetch("{{ route('checkout.store') }}", {
