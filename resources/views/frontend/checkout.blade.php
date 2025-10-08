@@ -861,6 +861,222 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {{-- <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const stripe = Stripe("{{ config('services.stripe.key') }}");
+                const elements = stripe.elements();
+                const card = elements.create("card");
+
+                // Show/hide Stripe form
+                document.querySelectorAll('input[name="payment_method"]').forEach(el => {
+                    el.addEventListener("change", function(e) {
+                        if (e.target.value === "stripe") {
+                            document.getElementById("stripe-form-container").style.display = "block";
+                            card.mount("#card-element");
+                        } else {
+                            document.getElementById("stripe-form-container").style.display = "none";
+                            card.unmount();
+                        }
+                    });
+                });
+
+                // Handle Checkout form submit
+                const form = document.getElementById("checkout-form");
+                form.addEventListener("submit", async function(e) {
+                    e.preventDefault();
+                    const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+
+                    if (!selectedPayment) {
+                        alert("Please select a payment method!");
+                        return;
+                    }
+
+                    // Stripe Payment
+                    if (selectedPayment.value === "stripe") {
+                        try {
+                            // 🧩 1️⃣ Create Payment Intent
+                            let res = await fetch("{{ url('/create-payment-intent') }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify({
+                                    amount: {{ $subtotal * 100 }}
+                                })
+                            });
+
+                            let text = await res.text();
+                            console.log("🧾 RAW RESPONSE:", text);
+                            let data = JSON.parse(text);
+
+                            console.log("💳 PaymentIntent:", data);
+                            console.log("💰 Amount (USD):", data.amount / 100);
+
+                            if (!data.clientSecret) throw new Error("Payment Intent creation failed!");
+
+                            // 🧩 2️⃣ Confirm Card Payment
+                            const {
+                                error,
+                                paymentIntent
+                            } = await stripe.confirmCardPayment(data.clientSecret, {
+                                payment_method: {
+                                    card: card
+                                }
+                            });
+
+                            if (error) {
+                                console.error("❌ Payment Error:", error.message);
+                                const msgBox = document.getElementById("card-errors");
+                                msgBox.style.color = "red";
+                                msgBox.textContent = error.message;
+                                return;
+                            }
+
+                            console.log("🎯 Final Payment Status:", paymentIntent.status);
+
+                            // 🧩 3️⃣ Handle Payment Status Cases
+                            let formData = new FormData(form);
+                            formData.append("payment_intent_id", paymentIntent.id);
+                            formData.append("status", paymentIntent.status); // ✅ send real status
+
+                            // Save order to DB
+                            let saveOrder = await fetch("{{ route('checkout.store') }}", {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                },
+                                credentials: "same-origin",
+                                body: formData
+                            });
+                            
+
+                            let resultText = await saveOrder.text();
+                            console.log("🧾 ORDER SAVE RAW RESPONSE:", resultText);
+                            let result = JSON.parse(resultText);
+
+                            const msgBox = document.getElementById("card-errors");
+
+                            // 🎉 Case 1: Payment succeeded
+                            if (paymentIntent.status === "succeeded" && result.success) {
+                                console.log("✅ Payment Succeeded, Order Saved!", result);
+                                msgBox.style.color = "green";
+                                msgBox.innerHTML = "✅ Payment successful!<br>Order ID: " + result.order_id;
+
+                                // Redirect to success page
+                                window.location.href = "{{ route('stripe.success') }}" +
+                                    "?order_id=" + result.order_id +
+                                    "&payment_intent=" + paymentIntent.id +
+                                    "&status=" + paymentIntent.status;
+                            }
+
+                            // ⏳ Case 2: Payment processing
+                            else if (paymentIntent.status === "processing" && result.success) {
+                                console.log("⏳ Payment Processing, Order Saved!", result);
+                                msgBox.style.color = "orange";
+                                msgBox.innerHTML =
+                                    "⏳ Your payment is processing.<br>We'll notify you when it's confirmed.";
+
+                                // Redirect with status info (optional)
+                                window.location.href = "{{ route('stripe.success') }}" +
+                                    "?order_id=" + result.order_id +
+                                    "&payment_intent=" + paymentIntent.id +
+                                    "&status=" + paymentIntent.status;
+                            }
+
+                            // ❌ Case 3: Payment failed
+                            else {
+                                console.error("❌ Payment Failed or Order Save Failed!", result);
+                                msgBox.style.color = "red";
+                                msgBox.textContent = "❌ Payment failed or order could not be saved!";
+                            }
+
+                        } catch (err) {
+                            console.error("🔥 ERROR:", err);
+                            const msgBox = document.getElementById("card-errors");
+                            msgBox.style.color = "red";
+                            msgBox.textContent = err.message;
+                        }
+                    } else {
+                        // COD or other methods
+                        form.submit();
+                    }
+                });
+            });
+        </script> --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const stripe = Stripe("{{ config('services.stripe.key') }}");
@@ -946,8 +1162,10 @@
                                 headers: {
                                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                                 },
+                                credentials: "same-origin",
                                 body: formData
                             });
+
 
                             let resultText = await saveOrder.text();
                             console.log("🧾 ORDER SAVE RAW RESPONSE:", resultText);

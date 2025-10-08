@@ -26,6 +26,11 @@ class HomeController extends Controller
         return view('userdashboard.order');
     }
 
+    public function profile()
+    {
+        return view('userdashboard.profile');
+    }
+
 
     public function about()
     {

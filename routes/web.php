@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware('auth')->name('home.dashboard');
+Route::get('/profile', [HomeController::class, 'profile'])->middleware('auth')->name('user.profile');
 Route::get('/order', [HomeController::class, 'order'])->middleware('auth')->name('user.order');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
@@ -28,7 +29,7 @@ Route::post('/add-to-cart/{id}', [FrontendController::class, 'addToCart'])->name
 Route::post('/update-cart/{id}', [FrontendController::class, 'updateCart'])->name('frontend.updateCart');
 Route::get('/remove-from-cart/{id}', [FrontendController::class, 'removeFromCart'])->name('frontend.removeFromCart');
 Route::post('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('frontend.applyCoupon');
-Route::post('/billing-details', [FrontendController::class, 'store'])->name('checkout.store');
+Route::post('/billing-details', [FrontendController::class, 'store'])->name('checkout.store')->middleware('auth');
 // routes/web.php
 Route::post('/order/update-status', [FrontendController::class, 'updateStatus']);
 
