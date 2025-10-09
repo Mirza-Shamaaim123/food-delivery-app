@@ -1,6 +1,6 @@
 @extends('frontend.layout.main')
 @section('content')
- <div class="breadcumb-wrapper overflow-hidden" data-bg-src="{{ asset('assets/img/bg/breadcumb-bg.jpg') }}">
+    <div class="breadcumb-wrapper overflow-hidden" data-bg-src="{{ asset('assets/img/bg/breadcumb-bg.jpg') }}">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -18,25 +18,54 @@
     <section class="th-blog-wrapper space-top space-extra-bottom overflow-hidden">
         <div class="container">
             <div class="row gx-40">
-                <div class="col-xxl-9 col-lg-8">
-                    <div class="th-blog blog-single has-post-thumbnail">
-                        <div class="blog-img"><a href="blog-details.html"><img src={{ asset('assets/img/blog/blog-s-1-1.jpg') }}
-                                    alt="Blog Image"></a></div>
-                        <div class="blog-content">
-                            <div class="blog-meta"><a class="author" href="blog.html"><i class="fal fa-user"></i>By
-                                    Jonson</a> <a href="blog.html"><i class="fal fa-calendar-days"></i>21 June, 2025</a>
+                <div class="col-xxl-9 col-lg-8 " >
+                    <div class="hello" style="margin-left:50px;" >
+                    @foreach ($blogs as $blog)
+                        <div class="th-blog blog-single has-post-thumbnail">
+                            <!-- 🖼 Blog Image -->
+                            <div class="blog-img" style="overflow:hidden;  border-radius:10px;">
+                                <a href="#">
+                                    @if ($blog->image)
+                                        <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
+                                            style="width:100%; height:600px; object-fit:cover; border-radius:10px;">
+                                    @else
+                                        <img src="{{ asset('assets/img/blog/default.jpg') }}" alt="No Image Available"
+                                            style="width:100%; height:300px; object-fit:cover; border-radius:10px;">
+                                    @endif
+                                </a>
                             </div>
-                            <h2 class="blog-title"><a href="blog-details.html">Is Fast Food Getting Healthier? Here’s
-                                    What We’re Doing</a></h2>
-                            <p class="blog-text">We believe great food starts with great ingredients. That’s why we use
-                                only the freshest produce, premium meats, and quality toppings — nothing artificial,
-                                always delicious. Hungry and in a hurry? No problem. We deliver mouthwatering meals
-                                fast, without compromising on taste or quality. Because fast food should still feel like
-                                real food. welcoming, fun, and casual atmosphere for everyone.</p><a
-                                href="blog-details.html" class="th-btn btn-mask btn-sm style2">READ MORE</a>
+
+                            <!-- ✍️ Blog Content -->
+                            
+                            <div class="blog-content">
+                                <div class="blog-meta">
+                                    <a class="author" href="#">
+                                        <i class="fal fa-user"></i> By Admin
+                                    </a>
+                                    <a href="#">
+                                        <i class="fal fa-calendar-days"></i>
+                                        {{ $blog->created_at->format('d M, Y') }}
+                                    </a>
+                                </div>
+
+                                <h2 class="blog-title">
+                                    <a href="#">{{ $blog->title }}</a>
+                                </h2>
+
+                                <p class="blog-text">
+                                    {{ Str::limit($blog->content, 180, '...') }}
+                                </p>
+
+                                <a href="#" class="th-btn btn-mask btn-sm style2">
+                                    READ MORE
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="th-blog blog-single has-post-thumbnail">
+                    @endforeach
+
+
+
+                    {{-- <div class="th-blog blog-single has-post-thumbnail">
                         <div class="blog-img th-slider" data-slider-options='{"effect":"fade"}'>
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide"><a href="blog-details.html"><img
@@ -111,7 +140,7 @@
                                 real food. welcoming, fun, and casual atmosphere for everyone.</p><a
                                 href="blog-details.html" class="th-btn btn-mask btn-sm style2">Read More</a>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="th-pagination">
                         <ul>
                             <li><a href="blog.html"><i class="fas fa-arrow-left"></i></a></li>
@@ -121,6 +150,7 @@
                         </ul>
                     </div>
                 </div>
+                 </div>
                 <div class="col-xxl-3 col-lg-4">
                     <aside class="sidebar-area">
                         <div class="widget widget_search">
@@ -143,7 +173,8 @@
                             <div class="recent-post-wrap">
                                 <div class="recent-post">
                                     <div class="media-img"><a href="blog-details.html"><img
-                                                src="{{ asset('assets/img/blog/recent-post-1-1.jpg') }}" alt="Blog Image"></a></div>
+                                                src="{{ asset('assets/img/blog/recent-post-1-1.jpg') }}"
+                                                alt="Blog Image"></a></div>
                                     <div class="media-body">
                                         <h4 class="post-title"><a class="text-inherit" href="blog-details.html">Loyalty
                                                 programs for regular customers</a></h4>
@@ -153,7 +184,8 @@
                                 </div>
                                 <div class="recent-post">
                                     <div class="media-img"><a href="blog-details.html"><img
-                                                src="{{ asset('assets/img/blog/recent-post-1-2.jpg') }}" alt="Blog Image"></a></div>
+                                                src="{{ asset('assets/img/blog/recent-post-1-2.jpg') }}"
+                                                alt="Blog Image"></a></div>
                                     <div class="media-body">
                                         <h4 class="post-title"><a class="text-inherit" href="blog-details.html">Donating
                                                 surplus food to local charities</a></h4>
@@ -163,7 +195,8 @@
                                 </div>
                                 <div class="recent-post">
                                     <div class="media-img"><a href="blog-details.html"><img
-                                                src="{{ asset('assets/img/blog/recent-post-1-3.jpg') }}" alt="Blog Image"></a></div>
+                                                src="{{ asset('assets/img/blog/recent-post-1-3.jpg') }}"
+                                                alt="Blog Image"></a></div>
                                     <div class="media-body">
                                         <h4 class="post-title"><a class="text-inherit" href="blog-details.html">Online
                                                 or phone orders for pick-up</a></h4>
@@ -179,7 +212,8 @@
                                     href="blog.html">Restaurant</a> <a href="blog.html">Burger</a> <a
                                     href="blog.html">Dinner</a> <a href="blog.html">Chicken</a></div>
                         </div>
-                        <div class="widget widget_banner" data-bg-src="{{ asset('assets/img/widget/sidebar-banner.jpg') }}">
+                        <div class="widget widget_banner"
+                            data-bg-src="{{ asset('assets/img/widget/sidebar-banner.jpg') }}">
                             <div class="widget-banner text-center"><a href="contact.html"
                                     class="th-btn btn-mask btn-sm style3">Order Now</a>
                                 <p class="text-des">Hungry and in a hurry? No problem. We deliver mouthwatering.</p>
@@ -190,5 +224,4 @@
             </div>
         </div>
     </section>
-
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
+use App\Models\Blog;
 
 class HomeController extends Controller
 {
@@ -70,7 +71,8 @@ class HomeController extends Controller
 }
 
 public function blog(){
-    return view('frontend.blog');
+     $blogs = Blog::where('status', 1)->latest()->paginate(6); // only published blogs
+    return view('frontend.blog', compact('blogs'));
 }
 
 

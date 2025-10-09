@@ -12,10 +12,10 @@
 
         <style>
             /* body {
-                     font-family: 'Inter', sans-serif;
-                                                                                                                                                                                                                                                                  background-color: #f9f9f9;
-                                                                                                                                                                                                                                                                  padding: 30px;
-                                                                                                                                                                                                                                                            } */
+                         font-family: 'Inter', sans-serif;
+                                                                                                                                                                                                                                                                      background-color: #f9f9f9;
+                                                                                                                                                                                                                                                                      padding: 30px;
+                                                                                                                                                                                                                                                                } */
 
             h2 {
                 font-size: 24px;
@@ -677,7 +677,11 @@
             let editDescriptionEditor;
 
             ClassicEditor
-                .create(document.querySelector('#editDescription'))
+                .create(document.querySelector('#editDescription'), {
+                    ckfinder: {
+                        uploadUrl: "{{ route('ckeditor.upload') . '?_token=' . csrf_token() }}"
+                    }
+                })
                 .then(editor => {
                     editDescriptionEditor = editor;
                 })

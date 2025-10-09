@@ -104,3 +104,17 @@ Route::get('/admin/review', [ReviewController::class, 'index'])->name('admin.rev
 Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 Route::post('/admin/review/status/{id}', [ReviewController::class, 'updateStatus'])->name('admin.review.status')->middleware('admin_check');
 
+
+
+
+
+
+
+
+
+
+
+
+Route::post('/ckeditor/upload', [App\Http\Controllers\CKEditorController::class, 'upload'])->name('ckeditor.upload');
+
+
