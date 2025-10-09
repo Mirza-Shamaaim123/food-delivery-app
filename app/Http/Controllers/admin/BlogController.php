@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 
 use App\Models\Blog;
@@ -36,7 +37,7 @@ class BlogController extends Controller
     public function store(Request $request)
     {
         //
-         $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'nullable|string|max:255',
             'content' => 'required|string',
@@ -54,50 +55,80 @@ class BlogController extends Controller
         $blog->author_id = Auth::id(); // admin id ya user id
 
         // ✅ Image upload
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '-' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/blogs'), $filename);
-            $blog->image = 'uploads/blogs/' . $filename;
-        }
 
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images/blogs', 'public');
+            $blog->image = $path;
+        }
         $blog->save();
 
         // ✅ Redirect or JSON response
         return redirect()->back()->with('success', 'Blog added successfully!');
         // return response()->json(['success' => true, 'message' => 'Blog added successfully!']);
     }
-    
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // 1️⃣ Validate inputs
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'content' => 'required|string',
+            'status' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // 2️⃣ Find the blog
+        $blog = Blog::findOrFail($id);
+
+        // 3️⃣ Update basic fields
+        $blog->title = $request->title;
+        $blog->category = $request->category;
+        $blog->content = $request->content;
+        $blog->status = $request->status;
+
+        // 4️⃣ If new image uploaded, handle it
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($blog->image && Storage::exists('public/' . $blog->image)) {
+                Storage::delete('public/' . $blog->image);
+            }
+
+            // Store new image
+            $path = $request->file('image')->store('uploads/blogs', 'public');
+            $blog->image = $path;
+        }
+
+        // 5️⃣ Save changes
+        $blog->save();
+
+        // 6️⃣ Redirect or return response
+        return redirect()->back()->with('success', 'Blog updated successfully!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $blog = Blog::findOrFail($id);
+
+        // delete old image if exists
+        if ($blog->image && Storage::exists('public/' . $blog->image)) {
+            Storage::delete('public/' . $blog->image);
+        }
+
+        // delete blog record
+        $blog->delete();
+
+        return redirect()->back()->with('success', 'Blog deleted successfully!');
     }
 }

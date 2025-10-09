@@ -89,6 +89,9 @@ Route::delete('/admin/tag/{id}', [TagController::class, 'destroy'])->name('admin
 //                      ADMIN BLOG ROUTES
 Route::get('/admin/blog', [BlogController::class, 'index'])->name('admin.blog')->middleware([ 'admin_check']);
 Route::post('/admin/blogs/store', [BlogController::class, 'store'])->name('blogs.store')->middleware([ 'admin_check']);
+Route::put('/admin/blogs/{id}', [BlogController::class, 'update'])->name('blogs.update')->middleware([ 'admin_check']);
+Route::delete('/admin/blogs/{id}', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+
 //              Coupon Routes
 Route::get('/admin/coupons', [CouponController::class, 'index'])->name('admin.coupons')->middleware([ 'admin_check']);
 Route::post('/admin/coupons', [CouponController::class, 'store'])->name('admin.coupons.store')->middleware([ 'admin_check']);

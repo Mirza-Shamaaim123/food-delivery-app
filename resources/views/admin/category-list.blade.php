@@ -36,7 +36,7 @@
             <tbody>
                 @foreach ($categories as $cat)
                     <tr>
-                         <td>{{ $categories->firstItem() + $loop->index }}</td>
+                        <td>{{ $categories->firstItem() + $loop->index }}</td>
                         <td>{{ $cat->name }}</td>
                         {{-- <td>{{ $cat->available_items }}</td> --}}
 
@@ -141,49 +141,49 @@
         </div>
 
         {{-- UPDATE CATEGORY MODEL --}}
-       <div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-labelledby="updateCategoryModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateCategoryModalLabel">Update Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="updateCategoryForm" action="#" method="POST" enctype="multipart/form-data">
-                    @csrf
+        <div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-labelledby="updateCategoryModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateCategoryModalLabel">Update Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="updateCategoryForm" action="#" method="POST" enctype="multipart/form-data">
+                            @csrf
 
-                    <input type="hidden" id="update_category_id" name="id">
+                            <input type="hidden" id="update_category_id" name="id">
 
-                    <label for="update_name">Category Name</label>
-                    <input type="text" id="update_name" name="name" class="form-control" required>
+                            <label for="update_name">Category Name</label>
+                            <input type="text" id="update_name" name="name" class="form-control" required>
 
-                    {{-- <label for="update_available_items">Available Items</label>
+                            {{-- <label for="update_available_items">Available Items</label>
                     <input type="number" id="update_available_items" name="available_items" min="0"
                         class="form-control" required> --}}
 
-                    <label for="update_status">Status</label>
-                    <select id="update_status" name="status" class="form-control" required>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
+                            <label for="update_status">Status</label>
+                            <select id="update_status" name="status" class="form-control" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
 
-                    <div class="mb-3">
-                        <label for="update_image">Category Image</label>
-                        <input type="file" id="update_image" name="image" accept="image/*"
-                            class="form-control">
+                            <div class="mb-3">
+                                <label for="update_image">Category Image</label>
+                                <input type="file" id="update_image" name="image" accept="image/*"
+                                    class="form-control">
 
-                        <!-- Purani image preview -->
-                        <img id="update_imagePreview" src="" alt="Category Image"
-                            style="max-width:120px; margin-top:10px; display:none;">
+                                <!-- Purani image preview -->
+                                <img id="update_imagePreview" src="" alt="Category Image"
+                                    style="max-width:120px; margin-top:10px; display:none;">
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 mt-3">Update Category</button>
+                        </form>
                     </div>
-
-                    <button type="submit" class="btn btn-success w-100 mt-3">Update Category</button>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
 
 
@@ -261,54 +261,55 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
         {{-- UPDATE MODEL JS --}}
-       <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const updateModal = new bootstrap.Modal(document.getElementById('updateCategoryModal'));
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const updateModal = new bootstrap.Modal(document.getElementById('updateCategoryModal'));
 
-        document.querySelectorAll('.editCategoryBtn').forEach(button => {
-            button.addEventListener('click', function (e) {
-                e.preventDefault();
+                document.querySelectorAll('.editCategoryBtn').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
 
-                // Populate modal fields
-                document.getElementById('update_category_id').value = this.dataset.id;
-                document.getElementById('update_name').value = this.dataset.name;
-                // document.getElementById('update_available_items').value = this.dataset.available;
-                document.getElementById('update_status').value = this.dataset.status;
+                        // Populate modal fields
+                        document.getElementById('update_category_id').value = this.dataset.id;
+                        document.getElementById('update_name').value = this.dataset.name;
+                        // document.getElementById('update_available_items').value = this.dataset.available;
+                        document.getElementById('update_status').value = this.dataset.status;
 
-                // ✅ Image preview
-                const imgPreview = document.getElementById('update_imagePreview');
-                if (this.dataset.image) {
-                    imgPreview.src = `/storage/${this.dataset.image}`;
-                    imgPreview.style.display = 'block';
-                } else {
-                    imgPreview.style.display = 'none';
-                }
+                        // ✅ Image preview
+                        const imgPreview = document.getElementById('update_imagePreview');
+                        if (this.dataset.image) {
+                            imgPreview.src = `/storage/${this.dataset.image}`;
+                            imgPreview.style.display = 'block';
+                        } else {
+                            imgPreview.style.display = 'none';
+                        }
 
-                // ✅ Set form action dynamically with correct ID
-                document.getElementById('updateCategoryForm').action = '/admin/category/' + this.dataset.id + '/update';
+                        // ✅ Set form action dynamically with correct ID
+                        document.getElementById('updateCategoryForm').action = '/admin/category/' + this
+                            .dataset.id + '/update';
 
-                // Show modal
-                updateModal.show();
+                        // Show modal
+                        updateModal.show();
+                    });
+                });
+
+                // ✅ Image preview when new file selected
+                const updateImageInput = document.getElementById('update_image');
+                const updateImagePreview = document.getElementById('update_imagePreview');
+
+                updateImageInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            updateImagePreview.src = e.target.result;
+                            updateImagePreview.style.display = 'block';
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
             });
-        });
-
-        // ✅ Image preview when new file selected
-        const updateImageInput = document.getElementById('update_image');
-        const updateImagePreview = document.getElementById('update_imagePreview');
-
-        updateImageInput.addEventListener('change', function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    updateImagePreview.src = e.target.result;
-                    updateImagePreview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-</script>
+        </script>
 
         {{-- DELETE CONFIRM     SWEET ALERT --}}
 

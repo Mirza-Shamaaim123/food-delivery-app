@@ -1,6 +1,12 @@
 @extends('admin.layout.main')
 
 @section('content')
+    <style>
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background: #f8f9fa;
+        }
+    </style>
     <div style="padding: 30px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="margin:0;">📝 All Blogs</h2>
@@ -40,22 +46,44 @@
                             @endif
                         </td>
                         <td style="padding:12px;">{{ $blog->created_at->format('d M Y') }}</td>
-                        <td style="padding:12px;">
-                            <a href="#" class="editBlogBtn" data-id="{{ $blog->id }}"
-                                data-title="{{ $blog->title }}" data-category="{{ $blog->category }}"
-                                data-content="{{ $blog->content }}" data-status="{{ $blog->status }}"
-                                data-image="{{ asset('uploads/blogs/' . $blog->image) }}"
-                                style="color:#007bff; text-decoration:none; margin-right:10px;">
-                                ✏️ Edit
-                            </a>
+                        
+                        <td style="padding:12px; position:relative;">
+                            <div class="dropdown">
+                                <button class="dropdown-toggle"
+                                    style="background:none; border:none; cursor:pointer; font-size:20px;">⋮</button>
 
-                            <form action="#" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    style="color:#dc3545; background:none; border:none; cursor:pointer;">🗑️ Delete</button>
-                            </form>
+                                <div class="dropdown-menu"
+                                    style="display:none; position:absolute; right:0; top:30px; background:white; border:1px solid #ddd;
+                   border-radius:6px; box-shadow:0 4px 10px rgba(0,0,0,0.1); min-width:120px; z-index:999;">
+
+                                    <!-- 👁️ View -->
+                                    <a href="#"
+                                        style="display:block; padding:8px 12px; text-decoration:none; color:#333;">👁️
+                                        View</a>
+
+                                    <!-- ✏️ Edit -->
+                                    <a href="#" class="editBlogBtn" data-id="{{ $blog->id }}"
+                                        data-title="{{ $blog->title }}" data-category="{{ $blog->category }}"
+                                        data-content="{{ $blog->content }}" data-status="{{ $blog->status }}"
+                                        data-image="{{ asset('storage/' . $blog->image) }}"
+                                        style="display:block; padding:8px 12px; text-decoration:none; color:#007bff;">
+                                        ✏️ Edit
+                                    </a>
+
+                                    <!-- 🗑️ Delete -->
+                                    <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST" style="margin:0;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            style="width:100%; text-align:left; background:none; border:none; color:#dc3545; 
+                           padding:8px 12px; cursor:pointer;">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </td>
+
                     </tr>
                 @endforeach
 
@@ -122,7 +150,7 @@
 
             <h3 style="margin-bottom:15px; color:#155d27; font-weight:600;">✏️ Edit Blog</h3>
 
-            <form id="editBlogForm" method="POST" enctype="multipart/form-data"
+            <form id="editBlogForm" action="{{ route('blogs.update', 'id') }}" method="POST" enctype="multipart/form-data"
                 style="display:flex; flex-direction:column; gap:12px;">
                 @csrf
                 @method('PUT')
@@ -138,9 +166,19 @@
                 <textarea name="content" id="editContent" rows="4" placeholder="Write blog content..."
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;"></textarea>
 
-                <label style="font-weight:500;">Upload New Image (optional):</label>
-                <input type="file" name="image"
-                    style="padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; cursor:pointer;">
+                <label style="font-weight:500;">Image</label>
+
+                <!-- File input -->
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="file" name="image" id="editImageInput"
+                        style="flex:1; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; cursor:pointer;">
+                </div>
+
+                <!-- Preview -->
+                <div style="margin-top:10px;">
+                    <img id="editImagePreview" src="" alt="Current Image"
+                        style="width:100px; height:100px; border-radius:8px; object-fit:cover; border:1px solid #ddd; display:none;">
+                </div>
 
                 <select name="status" id="editStatus" style="padding:10px; border:1px solid #ccc; border-radius:6px;">
                     <option value="1">Published</option>
@@ -196,18 +234,48 @@
             if (e.target === modal) modal.style.display = 'none';
         });
     </script>
+
+    {{-- Dropdown JS --}}
+    <script>
+        document.querySelectorAll('.dropdown-toggle').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // prevent window click from closing it immediately
+                const menu = btn.nextElementSibling;
+
+                // Close all other open dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(m => {
+                    if (m !== menu) m.style.display = 'none';
+                });
+
+                // Toggle current menu
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            });
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+        });
+    </script>
+
+
+
+
+
     {{-- ✅ Edit Blog Modal JS --}}
     <script>
         const editModal = document.getElementById('editBlogModal');
         const closeEditModalBtn = document.getElementById('closeEditModalBtn');
         const editForm = document.getElementById('editBlogForm');
+        const imageInput = document.getElementById('editImageInput');
+        const preview = document.getElementById('editImagePreview');
 
         // ✅ Open Edit Modal
         document.querySelectorAll('.editBlogBtn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
 
-                // Get data from button attributes
+                // Get data
                 const id = this.dataset.id;
                 const title = this.dataset.title;
                 const category = this.dataset.category;
@@ -222,14 +290,16 @@
                 document.getElementById('editContent').value = content;
                 document.getElementById('editStatus').value = status;
 
-                // ✅ Handle image preview
-                const preview = document.getElementById('editImagePreview');
-                if (image) {
-                    preview.src = image; // show current image URL
-                    preview.style.display = 'block'; // make image visible
+                // Show current image
+                if (image && image.trim() !== "") {
+                    preview.src = image;
+                    preview.style.display = 'block';
                 } else {
-                    preview.style.display = 'none'; // hide if no image
+                    preview.style.display = 'none';
                 }
+
+                // Reset file input
+                imageInput.value = '';
 
                 // Set form action dynamically
                 editForm.action = `/admin/blogs/${id}`;
@@ -237,6 +307,19 @@
                 // Show modal
                 editModal.style.display = 'flex';
             });
+        });
+
+        // ✅ Live image preview when user selects a new file
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
         });
 
         // ✅ Close Modal

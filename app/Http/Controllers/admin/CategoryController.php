@@ -46,7 +46,7 @@ class CategoryController extends Controller
 
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('images/category', 'public');
-                $category->image = $path; // stored as "images/category/filename.jpg"
+                $category->image = $path; 
             }
 
 
@@ -77,9 +77,8 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $category->name = $request->name;
-        // $category->description = $request->description;
         $category->status = $request->status;
-        // $category->available_items = $request->available_items;
+    
         // ✅ Agar nayi image upload hui hai
         if ($request->hasFile('image')) {
 
