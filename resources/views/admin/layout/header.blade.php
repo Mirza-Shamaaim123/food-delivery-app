@@ -843,6 +843,13 @@
 						</a>
 					</li>
 
+						<li>
+						<a class="" href="{{ route('admin.blog') }}" aria-expanded="false">
+							<i class="flaticon-dashboard-1"></i>
+							<span class="nav-text">Blogs</span>
+						</a>
+					</li>
+
 
 
                     {{-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">

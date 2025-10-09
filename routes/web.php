@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\ProductController;
@@ -85,6 +86,9 @@ Route::get('/admin/tag', [TagController::class, 'index'])->name('admin.tag')->mi
 Route::post('/admin/tag', [TagController::class, 'store'])->name('admin.tag.store')->middleware([ 'admin_check']);
 Route::put('/admin/tag/{id}', [TagController::class, 'update'])->name('admin.tag.update')->middleware([ 'admin_check']);
 Route::delete('/admin/tag/{id}', [TagController::class, 'destroy'])->name('admin.tag.delete')->middleware([ 'admin_check']);
+//                      ADMIN BLOG ROUTES
+Route::get('/admin/blog', [BlogController::class, 'index'])->name('admin.blog')->middleware([ 'admin_check']);
+Route::post('/admin/blogs/store', [BlogController::class, 'store'])->name('blogs.store')->middleware([ 'admin_check']);
 //              Coupon Routes
 Route::get('/admin/coupons', [CouponController::class, 'index'])->name('admin.coupons')->middleware([ 'admin_check']);
 Route::post('/admin/coupons', [CouponController::class, 'store'])->name('admin.coupons.store')->middleware([ 'admin_check']);
