@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Tag;
 
 
 use App\Models\Blog;
@@ -20,7 +21,9 @@ class BlogController extends Controller
     {
         //
         $blogs = Blog::orderBy('created_at', 'desc')->get();
-        return view('admin.blog-list', compact('blogs'));
+         $tags = Tag::all();
+
+        return view('admin.blog-list', compact('blogs', 'tags'));
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Blog;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
@@ -40,40 +41,43 @@ class HomeController extends Controller
     }
 
     public function update(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // ✅ 1️⃣ Validate user input
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email',
-        'phone' => 'nullable|string|max:20',
-        'address' => 'nullable|string|max:255',
-    ]);
-
-    // ✅ 2️⃣ Update user basic info
-    $user->update([
-        'name' => $request->name,
-        'email' => $request->email,
-    ]);
-
-    // ✅ 3️⃣ Update latest order billing info (if exists)
-    $latestOrder = Order::where('user_id', $user->id)->latest()->first();
-    if ($latestOrder) {
-        $latestOrder->update([
-            'billing_phone_number' => $request->phone,
-            'billing_street_address' => $request->address,
+        // ✅ 1️⃣ Validate user input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
         ]);
+
+        // ✅ 2️⃣ Update user basic info
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        // ✅ 3️⃣ Update latest order billing info (if exists)
+        $latestOrder = Order::where('user_id', $user->id)->latest()->first();
+        if ($latestOrder) {
+            $latestOrder->update([
+                'billing_phone_number' => $request->phone,
+                'billing_street_address' => $request->address,
+            ]);
+        }
+
+        // ✅ 4️⃣ Redirect with success message
+        return back()->with('success', 'Profile updated successfully!');
     }
 
-    // ✅ 4️⃣ Redirect with success message
-    return back()->with('success', 'Profile updated successfully!');
-}
-
-public function blog(){
-     $blogs = Blog::where('status', 1)->latest()->paginate(6); // only published blogs
-    return view('frontend.blog', compact('blogs'));
-}
+    public function blog()
+    {
+        $blogs = Blog::where('status', 1)->latest()->paginate(6); // only published blogs
+        $categories = Category::all();
+        $recentBlogs = Blog::latest()->take(3)->get();
+        return view('frontend.blog', compact('blogs', 'categories', 'recentBlogs'));
+    }
 
 
 

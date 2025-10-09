@@ -161,6 +161,17 @@
 
                 <input type="text" name="category" id="editCategory" placeholder="Enter category"
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;">
+
+                     <div class="mb-3">
+                            <label for="tags">Tags</label>
+                            <select name="tags[]" id="tags" class="form-control" multiple>
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                 {{-- TEXT EDITIOR --}}
                 <textarea id="editContent" name="content" rows="5"
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;">
