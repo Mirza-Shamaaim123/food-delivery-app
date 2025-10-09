@@ -53,7 +53,7 @@
                                 </h2>
 
                                 <p class="blog-text">
-                                    {{ Str::limit($blog->content, 180, '...') }}
+                                    {!! $blog->content !!}
                                 </p>
 
                                 <a href="#" class="th-btn btn-mask btn-sm style2">

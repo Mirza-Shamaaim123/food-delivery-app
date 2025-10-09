@@ -46,7 +46,7 @@
                             @endif
                         </td>
                         <td style="padding:12px;">{{ $blog->created_at->format('d M Y') }}</td>
-                        
+
                         <td style="padding:12px; position:relative;">
                             <div class="dropdown">
                                 <button class="dropdown-toggle"
@@ -71,7 +71,8 @@
                                     </a>
 
                                     <!-- 🗑️ Delete -->
-                                    <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST" style="margin:0;">
+                                    <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST"
+                                        style="margin:0;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -100,7 +101,7 @@
 
         <div
             style="background:white; padding:25px; border-radius:10px; 
-              width:500px; max-width:90%; box-shadow:0 5px 20px rgba(0,0,0,0.2); 
+              width:700px; max-width:95%; box-shadow:0 5px 20px rgba(0,0,0,0.2); 
               animation:fadeIn 0.25s ease;">
 
             <h3 style="margin-bottom:15px; color:#155d27; font-weight:600;">➕ Add New Blog</h3>
@@ -113,10 +114,8 @@
 
                 <input type="text" name="category" placeholder="Enter category"
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;">
-
-                <textarea name="content" rows="4" placeholder="Write blog content..."
-                    style="padding:10px; border:1px solid #ccc; border-radius:6px;"></textarea>
-
+                {{-- TEXT EDITIOR --}}
+                <textarea id="description" name="content" rows="6" placeholder="Write blog content..."></textarea>
                 <label style="font-weight:500;">Upload Image:</label>
                 <input type="file" name="image"
                     style="padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; cursor:pointer;">
@@ -145,7 +144,7 @@
 
         <div
             style="background:white; padding:25px; border-radius:10px;
-              width:500px; max-width:90%; box-shadow:0 5px 20px rgba(0,0,0,0.2);
+              width:700px; max-width:95%; box-shadow:0 5px 20px rgba(0,0,0,0.2);
               animation:fadeIn 0.25s ease;">
 
             <h3 style="margin-bottom:15px; color:#155d27; font-weight:600;">✏️ Edit Blog</h3>
@@ -162,10 +161,10 @@
 
                 <input type="text" name="category" id="editCategory" placeholder="Enter category"
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;">
-
-                <textarea name="content" id="editContent" rows="4" placeholder="Write blog content..."
-                    style="padding:10px; border:1px solid #ccc; border-radius:6px;"></textarea>
-
+                {{-- TEXT EDITIOR --}}
+                <textarea id="editContent" name="content" rows="5"
+                    style="padding:10px; border:1px solid #ccc; border-radius:6px;">
+                </textarea>
                 <label style="font-weight:500;">Image</label>
 
                 <!-- File input -->
@@ -329,6 +328,60 @@
 
         window.addEventListener('click', (e) => {
             if (e.target === editModal) editModal.style.display = 'none';
+        });
+    </script>
+
+    {{-- ✅ CKEditor JS  For Add Blog --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            ClassicEditor
+                .create(document.querySelector('#description'), {
+                    ckfinder: {
+                        uploadUrl: "{{ route('ckeditor.upload') . '?_token=' . csrf_token() }}"
+                    },
+                    image: {
+                        toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side']
+                    }
+                })
+                .then(editor => {
+                    console.log('✅ CKEditor loaded for Add Blog');
+                })
+                .catch(error => {
+                    console.error('CKEditor initialization failed:', error);
+                });
+        });
+    </script>
+
+    {{-- ✅ CKEditor JS  For Edit Blog --}}
+    <script>
+        let editBlogEditor; // store CKEditor instance
+
+        // When the Edit Blog Modal opens
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('editBlogBtn')) {
+                const modal = document.getElementById('editBlogModal');
+                modal.style.display = 'flex';
+
+                // Initialize CKEditor if not already
+                setTimeout(() => {
+                    if (!$('#editContent').data('ckeditor-initialized')) {
+                        ClassicEditor
+                            .create(document.querySelector('#editContent'), {
+                                ckfinder: {
+                                    uploadUrl: "{{ route('ckeditor.upload') . '?_token=' . csrf_token() }}"
+                                }
+                            })
+                            .then(editor => {
+                                editBlogEditor = editor;
+                                $('#editContent').data('ckeditor-initialized', true);
+                                console.log("✅ CKEditor initialized in Edit Modal");
+                            })
+                            .catch(error => console.error("CKEditor Edit Init Error:", error));
+                    }
+                }, 300);
+            }
         });
     </script>
 @endsection
