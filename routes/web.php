@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\Admin\TagController;
@@ -24,6 +25,7 @@ Route::post('/profile/update', [HomeController::class, 'update'])->name('profile
 
 Route::get('/order', [HomeController::class, 'order'])->middleware('auth')->name('user.order');
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
+Route::post('/contact/store', [HomeController::class, 'store'])->name('contact.store');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/blog', [HomeController::class, 'blog'])->name('home.blog');
 Route::get('/shop', [FrontendController::class, 'shop'])->name('frontend.shop');
@@ -103,6 +105,8 @@ Route::delete('/admin/coupons/{id}', [CouponController::class, 'destroy'])->name
 Route::get('/admin/review', [ReviewController::class, 'index'])->name('admin.review')->middleware([ 'admin_check']);
 Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 Route::post('/admin/review/status/{id}', [ReviewController::class, 'updateStatus'])->name('admin.review.status')->middleware('admin_check');
+//              Admin Contact Routes
+Route::get('/admin/contact', [ContactController::class, 'index'])->name('admin.contact')->middleware([ 'admin_check']);
 
 
 

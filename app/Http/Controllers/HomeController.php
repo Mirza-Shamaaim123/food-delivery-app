@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Blog;
 use App\Models\Category;
+use App\Models\Contact;
 
 class HomeController extends Controller
 {
@@ -93,5 +94,18 @@ class HomeController extends Controller
     public function contact()
     {
         return view('frontend.contact');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'message' => 'required',
+        ]);
+
+        Contact::create($request->only(['name', 'email', 'message']));
+
+        return redirect()->back()->with('success', 'Your message has been sent!');
     }
 }

@@ -849,6 +849,12 @@
 							<span class="nav-text">Blogs</span>
 						</a>
 					</li>
+						<li>
+						<a class="" href="{{ route('admin.contact') }}" aria-expanded="false">
+							<i class="flaticon-dashboard-1"></i>
+							<span class="nav-text">Contact</span>
+						</a>
+					</li>
 
 
 

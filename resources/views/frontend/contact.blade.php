@@ -1,6 +1,6 @@
 @extends('frontend.layout.main')
 @section('content')
-      <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
+    <div class="breadcumb-wrapper overflow-hidden" data-bg-src="assets/img/bg/breadcumb-bg.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -60,15 +60,23 @@
                 <div class="col-xl-6">
                     <div class="contact-form-v2 contact-page-form">
                         <h2 class="title mt-n3 fw-semibold mb-30">Get In Touch!</h2>
-                        <form action="https://html.themehour.net/barab/demo/mail.php" method="POST"
-                            class="contact-form ajax-contact">
+                        @if (session('success'))
+                            <div
+                                style="background:#d4edda; color:#155724; padding:10px; border-radius:6px; margin-bottom:10px;">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        <form action="{{ route('contact.store') }}" method="POST" class="contact-form ajax-contact">
+                            @csrf
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" name="name" id="name" placeholder="Your Name">
-                                     <i class="fal fa-user"></i>
-                                    </div>
+                                    <input type="text" class="form-control" name="name" id="name"
+                                        placeholder="Your Name">
+                                    <i class="fal fa-user"></i>
+                                </div>
                                 <div class="form-group col-md-6">
-                                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"> 
+                                    <input type="email" class="form-control" name="email" id="email"
+                                        placeholder="Your Email">
                                     <i class="fal fa-envelope"></i>
                                 </div>
                                 {{-- <div class="form-group col-md-12 style-border">
@@ -82,14 +90,14 @@
                                     </select>
                                 </div> --}}
                                 <div class="col-12 form-group">
-                                    <textarea placeholder="Write Message...."    class="form-control"></textarea> 
+                                    <textarea name="message" placeholder="Write Message...." class="form-control"></textarea>
                                     <i class="fal fa-pencil"></i>
                                 </div>
                                 <div class="form-btn col-12">
                                     <button class="th-btn style2 style-radius">SEND MESSAGE NOW</button>
-                                    </div>
+                                </div>
                             </div>
-                            <p class="form-messages mb-0 mt-3"></p>
+                            {{-- <p class="form-messages mb-0 mt-3"></p> --}}
                         </form>
                     </div>
                 </div>
@@ -104,8 +112,8 @@
         <div class="container">
             <div class="row gy-4 justify-content-center">
                 <div class="col-xl-6">
-                    <div class="title-area location-content"><span
-                            class="sub-title style-2 text-anime-style-1">Restaurant Location</span>
+                    <div class="title-area location-content"><span class="sub-title style-2 text-anime-style-1">Restaurant
+                            Location</span>
                         <h2 class="sec-title text-anime-style-2">Visit Our restaurant</h2>
                         <p class="box-text pe-xxl-5 ps-xxl-5 text-anime-style-3">213 W Tomichi Ave, Gunnison, CO 81230,
                             United States</p>
