@@ -114,6 +114,17 @@
 
                 <input type="text" name="category" placeholder="Enter category"
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;">
+
+                {{-- ✅ TAGS FIELD (Select2 Multiple) --}}
+                <label style="font-weight:500;">Select Tags:</label>
+                <select name="tags_ids[]" id="tags" multiple="multiple"
+                    style="width:100%; border:1px solid #ccc; border-radius:6px;">
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    @endforeach
+                </select>
+
+
                 {{-- TEXT EDITIOR --}}
                 <textarea id="description" name="content" rows="6" placeholder="Write blog content..."></textarea>
                 <label style="font-weight:500;">Upload Image:</label>
@@ -162,14 +173,14 @@
                 <input type="text" name="category" id="editCategory" placeholder="Enter category"
                     style="padding:10px; border:1px solid #ccc; border-radius:6px;">
 
-                     <div class="mb-3">
-                            <label for="tags">Tags</label>
-                            <select name="tags[]" id="tags" class="form-control" multiple>
-                                @foreach ($tags as $tag)
-                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                <div class="mb-3">
+                    <label for="tags">Tags</label>
+                    <select name="tags[]" id="tags" class="form-control" multiple>
+                        @foreach ($tags as $tag)
+                            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
 
                 {{-- TEXT EDITIOR --}}
@@ -393,6 +404,21 @@
                     }
                 }, 300);
             }
+        });
+    </script>
+    {{-- Select 2 js --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // initialize select2 for tags
+            $('#tags').select2({
+                placeholder: 'Select tags',
+                allowClear: true,
+                width: '100%'
+            });
         });
     </script>
 @endsection

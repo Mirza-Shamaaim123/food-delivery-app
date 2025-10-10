@@ -21,7 +21,7 @@ class BlogController extends Controller
     {
         //
         $blogs = Blog::orderBy('created_at', 'desc')->get();
-         $tags = Tag::all();
+        $tags = Tag::all();
 
         return view('admin.blog-list', compact('blogs', 'tags'));
     }
@@ -46,6 +46,8 @@ class BlogController extends Controller
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'status' => 'required|boolean',
+            'tags' => 'required|array',       // use "tags" instead of "tag_id"
+            'tags.*' => 'exists:tags,id',
         ]);
 
         // ✅ New blog object
@@ -55,7 +57,8 @@ class BlogController extends Controller
         $blog->category = $request->category;
         $blog->content = $request->content;
         $blog->status = $request->status;
-        $blog->author_id = Auth::id(); // admin id ya user id
+        $blog->author_id = Auth::id();
+        $blog->tags_ids = json_encode($request->tags_ids); // admin id ya user id
 
         // ✅ Image upload
 
