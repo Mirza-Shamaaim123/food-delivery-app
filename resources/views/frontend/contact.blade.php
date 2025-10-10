@@ -63,23 +63,31 @@
                         <form action="https://html.themehour.net/barab/demo/mail.php" method="POST"
                             class="contact-form ajax-contact">
                             <div class="row">
-                                <div class="form-group col-md-6"><input type="text" class="form-control" name="name"
-                                        id="name" placeholder="Your Name"> <i class="fal fa-user"></i></div>
-                                <div class="form-group col-md-6"><input type="email" class="form-control" name="email"
-                                        id="email" placeholder="Your Email"> <i class="fal fa-envelope"></i></div>
-                                <div class="form-group col-md-12 style-border"><select name="subject" id="subject"
-                                        class="form-select">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Your Name">
+                                     <i class="fal fa-user"></i>
+                                    </div>
+                                <div class="form-group col-md-6">
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"> 
+                                    <i class="fal fa-envelope"></i>
+                                </div>
+                                {{-- <div class="form-group col-md-12 style-border">
+                                    <select name="subject" id="subject"  class="form-select">
                                         <option value="" disabled="disabled" selected="selected" hidden>Select Service
                                         </option>
                                         <option value="Personal Training">Personal Training</option>
                                         <option value="Gym & Fitness Training">Gym & Fitness Training</option>
                                         <option value="Basic Yoga">Basic Yoga</option>
                                         <option value="Muscle Building">Muscle Building</option>
-                                    </select></div>
-                                <div class="col-12 form-group"><textarea placeholder="Write Message...."
-                                        class="form-control"></textarea> <i class="fal fa-pencil"></i></div>
-                                <div class="form-btn col-12"><button class="th-btn style2 style-radius">SEND MESSAGE
-                                        NOW</button></div>
+                                    </select>
+                                </div> --}}
+                                <div class="col-12 form-group">
+                                    <textarea placeholder="Write Message...."    class="form-control"></textarea> 
+                                    <i class="fal fa-pencil"></i>
+                                </div>
+                                <div class="form-btn col-12">
+                                    <button class="th-btn style2 style-radius">SEND MESSAGE NOW</button>
+                                    </div>
                             </div>
                             <p class="form-messages mb-0 mt-3"></p>
                         </form>
