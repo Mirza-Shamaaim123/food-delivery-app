@@ -137,13 +137,13 @@
                                     <li><a href="wishlist.html">Wishlist</a></li>
                                 </ul>
                             </li>
-                            <li><a href="reservation.html">Reservation</a></li>
+                            {{-- <li><a href="reservation.html">Reservation</a></li>
                             <li><a href="team.html">Our Chef</a></li>
                             <li><a href="team-details.html">Chef Details</a></li>
                             <li><a href="gallery.html">Gallery</a></li>
                             <li><a href="faq.html">FAQS</a></li>
                             <li><a href="testimonials.html">Testimonials</a></li>
-                            <li><a href="error.html">Error Page</a></li>
+                            <li><a href="error.html">Error Page</a></li> --}}
                         </ul>
                     </li>
                     <li class="menu-item-has-children"><a href="#">BLOG</a>
@@ -210,8 +210,8 @@
                                     <li><a href="{{ route('home.about') }}">ABOUT</a></li>
                                     <li class="menu-item-has-children"><a href="#">MENU</a>
                                         <ul class="sub-menu">
-                                            <li><a href="menu-grid.html">Menu grid</a></li>
-                                            <li><a href="menu-list.html">Menu List</a></li>
+                                            {{-- <li><a href="menu-grid.html">Menu grid</a></li>
+                                            <li><a href="menu-list.html">Menu List</a></li> --}}
                                         </ul>
                                     </li>
                                     <li class="menu-item-has-children"><a href="#">PAGES</a>
@@ -219,25 +219,25 @@
                                             <li class="menu-item-has-children"><a href="#">Shop</a>
                                                 <ul class="sub-menu">
                                                     <li><a href="{{ route('frontend.shop') }}">Shop</a></li>
-                                                    <li><a href="shop-details.html">Shop Details</a></li>
+                                                    {{-- <li><a href="shop-details.html">Shop Details</a></li> --}}
                                                     <li><a href="cart.html">Cart Page</a></li>
                                                     <li><a href="{{ route('frontend.checkout') }}">Checkout</a></li>
-                                                    <li><a href="{{ route('home.dashboard') }}">Wishlist</a></li>
+                                                    {{-- <li><a href="#">Wishlist</a></li> --}}
                                                 </ul>
                                             </li>
-                                            <li><a href="reservation.html">Reservation</a></li>
+                                            {{-- <li><a href="reservation.html">Reservation</a></li>
                                             <li><a href="team.html">Our Chef</a></li>
                                             <li><a href="team-details.html">Chef Details</a></li>
                                             <li><a href="gallery.html">Gallery</a></li>
                                             <li><a href="testimonials.html">Testimonials</a></li>
                                             <li><a href="faq.html">FAQS</a></li>
-                                            <li><a href="error.html">Error Page</a></li>
+                                            <li><a href="error.html">Error Page</a></li> --}}
                                         </ul>
                                     </li>
                                     <li class="menu-item-has-children"><a href="#">BLOG</a>
                                         <ul class="sub-menu">
                                             <li><a href="{{ route('home.blog') }}">Blog</a></li>
-                                            <li><a href="blog-details.html">Blog Details</a></li>
+                                            {{-- <li><a href="blog-details.html">Blog Details</a></li> --}}
                                         </ul>
                                     </li>
                                     <li><a href="{{ route('home.contact') }}">CONTACT</a></li>
