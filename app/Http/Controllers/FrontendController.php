@@ -23,10 +23,7 @@ class FrontendController extends Controller
     public function index()
     {
         $categories = Category::withCount('products')->has('products')->get();
-
-
         $featuredProducts = Product::where('is_featured_on_homepage', 'Yes')->limit(4)->get();
-
         return view('frontend.index', compact('categories', 'featuredProducts'));
     }
     public function shop()
@@ -39,7 +36,6 @@ class FrontendController extends Controller
         $product = Product::findOrFail($id);
         $tags = Tag::all();
         $reviews = $product->reviews()->where('status', 'approved')->get();
-
         return view('frontend.shop-details', compact('product', 'tags', 'reviews'));
     }
 
@@ -49,16 +45,12 @@ class FrontendController extends Controller
     {
         // 1. Session se cart nikal raha hai
         $cart = session()->get('cart', []);
-        // dd($cart);
-
         // 2. Subtotal calculate karne ke liye variable banaya
         $subtotal = 0;
-
         // 3. Cart ke andar jitne bhi products hain unke price × quantity ka total banaya
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
-        //   dd(session()->get('cart'));
         return view('frontend.cart', compact('cart', 'subtotal'));
     }
 
@@ -66,7 +58,6 @@ class FrontendController extends Controller
     {
         $product = Product::findOrFail($id);
         $cart = session()->get('cart', []);
-
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
         } else {
@@ -77,10 +68,7 @@ class FrontendController extends Controller
                 "image" => $product->image,
             ];
         }
-
         session()->put('cart', $cart);
-
-
         return redirect()->route('frontend.cart')->with('success', 'Product added to cart!');
     }
 
