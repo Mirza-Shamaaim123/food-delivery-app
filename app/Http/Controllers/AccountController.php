@@ -12,66 +12,63 @@ use  Illuminate\Support\Facades\Validator;
 class AccountController extends Controller
 {
     //
-    public function login(){
+    public function login()
+    {
         return view('frontend.account.login');
     }
 
 
 
-public function authenticate(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    public function authenticate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
-    }
-
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-        $user = Auth::user();
-
-        // ✅ Role check karke redirect
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } else if ($user->role === 'user') {
-            return redirect()->route('home.dashboard');
-        }else{
-            return redirect()->route('home');
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+
+            // ✅ Role check karke redirect
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else if ($user->role === 'user') {
+                return redirect()->route('home.dashboard');
+            } else {
+                return redirect()->route('home');
+            }
+        }
+
+        return redirect()->back()->with('error', 'Invalid credentials');
     }
 
-    return redirect()->back()->with('error', 'Invalid credentials');
-}
 
 
-
-     public function registration(){
+    public function registration()
+    {
         return view('frontend.account.registration');
-        
     }
-    public function processRegistration(Request $request){
+    public function processRegistration(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'password_confirmation' => 'required|same:password',
         ]);
-        if($validator->passes()){
+        if ($validator->passes()) {
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->save();
             return redirect('/account/login');
-        }else{
+        } else {
             return redirect()->back()->withErrors($validator)->withInput();
-
         }
-
     }
 }
-
-
